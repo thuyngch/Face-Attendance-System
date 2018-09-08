@@ -3,6 +3,7 @@
 #------------------------------------------------------------------------------
 import os
 import sys
+from glob import glob
 from multiprocessing import Pool, cpu_count
 from itertools import repeat
 
@@ -64,8 +65,10 @@ if len(student_id) != 7:
 folder = os.path.join("face-dataset", student_id)
 if not os.path.exists(folder):
 	os.mkdir(folder)
+	save_id = 0
 else:
 	key = input(">> Student ID has already existed. Do you want to append? [y/n] ")
+	save_id = len(glob(os.path.join(folder, "*.*")))
 	if key=="n" or key=="N":
 		sys.exit("Exit the application.")
 
@@ -94,7 +97,6 @@ print("--------------------------------------------------------\n")
 #	Collect samples of image
 #------------------------------------------------------------------------------
 frame_idx = 0
-save_id = 0
 while(cap.isOpened()):
 	# Read frame
 	if frame_idx<10:
