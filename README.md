@@ -9,4 +9,4 @@ An Attendance Checking System using Deep Facial Recognition, written by Python.
 * **Nguyen Tan Sy** - *Technical*, *GUI*
 * **Do Tieu Thien** - *Algorithm*, *Face recognition*
 * **Nguyen Van Qui** - *Algorithm*, *Face detection and normalization*
-* **Nguyen Tan Phu** - *Algorithm*, *Blur removal
+* **Nguyen Tan Phu** - *Algorithm*, *Blur removal*
