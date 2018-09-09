@@ -14,8 +14,8 @@ cd ~/.virtualenvs
 ```
 * Install virtual-environment packages:
 ```
-sudo pip install virtualenv virtualenvwrapper
-sudo pip3 install virtualenv virtualenvwrapper
+sudo /usr/local/bin/pip install virtualenv virtualenvwrapper
+sudo /usr/local/bin/pip3 install virtualenv virtualenvwrapper
 ```
 * Using a text editor, open file "~/.bashrc", then add the following text into the end of the file, and save the file:
 ```
@@ -27,7 +27,7 @@ source /usr/local/bin/virtualenvwrapper.sh
 * Create a virtual environment, named *face_attendace*:
 ```
 source ~/.bashrc
-virtualenv -p /usr/bin/python3 face_attendace
+/usr/local/bin/virtualenv -p /usr/bin/python3 face_attendace
 workon face_attendace
 ```
 * Change to the directory containing your downloaded porject, then install requirements:
