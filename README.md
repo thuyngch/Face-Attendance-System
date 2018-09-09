@@ -3,16 +3,16 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
 
 
 # Setup guidance
-* Install pip, pip3, and cmake:
+* Install dependences:
 ```
 sudo apt-get install -y python-pip python3-pip cmake
 ```
-* Create virtual environment folder:
+* Create a folder containing virtual environments:
 ```
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
 ```
-* Install virtualenv:
+* Install virtual-environment packages:
 ```
 sudo pip install virtualenv virtualenvwrapper
 sudo pip3 install virtualenv virtualenvwrapper
@@ -26,10 +26,11 @@ source /usr/local/bin/virtualenvwrapper.sh
 ```
 * Create a virtual environment, named *face_attendace*:
 ```
+source ~/.bashrc
 virtualenv -p /usr/bin/python3 face_attendace
 workon face_attendace
 ```
-* Change to the directory containing our porject, then install requirements:
+* Change to the directory containing your downloaded porject, then install requirements:
 ```
 cd <dir_to_project>
 pip install -r requirements.txt
