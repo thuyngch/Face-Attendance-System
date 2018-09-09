@@ -1,25 +1,37 @@
 # Face-Attendance-System
-An Attendance Checking System using Deep Facial Recognition, written by Python.
+An Attendance Checking System using Deep Facial Recognition, written in Python.
 
 
 # Setup guidance
-* Install virtualenv:
+* Install pip, pip3, and cmake:
 ```
-sudo pip3 install virtualenv
+sudo apt-get install -y python-pip python3-pip cmake
 ```
 * Create virtual environment folder:
 ```
 mkdir ~/.virtualenvs
 cd ~/.virtualenvs
 ```
+* Install virtualenv:
+```
+sudo pip install virtualenv virtualenvwrapper
+sudo pip3 install virtualenv virtualenvwrapper
+```
+* Using a text editor, open file "~/.bashrc", then add the following text into the end of the file, and save the file:
+```
+# virtualenv and virtualenvwrapper
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+source /usr/local/bin/virtualenvwrapper.sh
+```
 * Create a virtual environment, named *face_attendace*:
 ```
-virtualenv -p python3 face_attendace
+virtualenv -p /usr/bin/python3 face_attendace
 workon face_attendace
 ```
 * Change to the directory containing our porject, then install requirements:
 ```
-cd dir_to_project
+cd <dir_to_project>
 pip install -r requirements.txt
 ```
 * Check the result:
@@ -37,3 +49,13 @@ opencv-python==3.3.1.11
 Pillow==5.2.0
 scipy==1.1.0
 ```
+
+
+## Team members
+
+* **Nguyen Chinh Thuy** - *Technical*, *Functional management*
+* **Le Van Hoang Phuong** - *Technical*, *Attendance management*
+* **Nguyen Tan Sy** - *Technical*, *GUI*
+* **Do Tieu Thien** - *Algorithm*, *Face recognition*
+* **Nguyen Van Qui** - *Algorithm*, *Face detection and normalization*
+* **Nguyen Tan Phu** - *Algorithm*, *Blur removal*
