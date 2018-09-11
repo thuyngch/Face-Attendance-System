@@ -50,6 +50,10 @@ opencv-python==3.3.1.11
 Pillow==5.2.0
 scipy==1.1.0
 ```
+* To run the collect-data tool, use this command:
+```
+python collect-data-tool/collect-data.py
+```
 
 
 ## Team members
