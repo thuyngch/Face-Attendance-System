@@ -30,7 +30,7 @@ source ~/.bashrc
 /usr/local/bin/virtualenv -p /usr/bin/python3 face_attendace
 workon face_attendace
 ```
-* Change to the directory containing your downloaded porject, then install requirements:
+* Change to the directory containing your downloaded project, then install requirements:
 ```
 cd <dir_to_project>
 pip install -r requirements.txt
@@ -56,7 +56,7 @@ python collect-data-tool/collect-data.py
 ```
 
 
-## Team members
+# Team members
 
 * **Nguyen Chinh Thuy** - *Technical*, *Functional management*
 * **Le Van Hoang Phuong** - *Technical*, *Attendance management*
