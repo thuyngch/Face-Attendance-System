@@ -1,0 +1,15 @@
+click==6.7
+cycler==0.10.0
+dlib==19.15.0
+face-recognition==1.2.1
+face-recognition-models==0.3.0
+kiwisolver==1.0.1
+matplotlib==2.2.3
+numpy==1.15.1
+opencv-python==3.3.1.11
+Pillow==5.2.0
+pyparsing==2.2.0
+python-dateutil==2.7.3
+pytz==2018.5
+scipy==1.1.0
+six==1.11.0
