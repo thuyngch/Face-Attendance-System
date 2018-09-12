@@ -136,6 +136,7 @@ while(cap.isOpened()):
 		filename = os.path.join(folder, "%s_%d.png" % (student_id, save_id))
 		cv2.imwrite(filename, frame)
 		save_id += 1
+	print("Number of saved frames: %d" % (save_id))
 	print("--------------------------------------------------------\n")
 
 cap.release()
