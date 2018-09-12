@@ -54,6 +54,7 @@ scipy==1.1.0
 ```
 python collect-data-tool/collect-data.py
 ```
+* To end the running of code, click to the figure displaying webcam, press "q".
 
 
 # Team members
