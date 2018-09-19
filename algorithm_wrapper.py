@@ -22,7 +22,9 @@ class AlgorithmAPIs(object):
 		threshold : (float) Threshold for comparing embeddings.
 		use_multiprocessing : (bool) Use multi-processing or not?
 	"""
-	def __init__(self, template_dir="templates", threshold=0.5,
+	def __init__(self,
+				template_dir="templates",
+				threshold=0.5,
 				use_multiprocessing=False):
 		# Parameters
 		super(AlgorithmAPIs, self).__init__()
@@ -42,7 +44,6 @@ class AlgorithmAPIs(object):
 			print("[AlgorithmAPIs]Create %d pools" % (self.n_cpus))
 		else:
 			self.pools = None
-
 
 	def find_bbox(self, image):
 		"""

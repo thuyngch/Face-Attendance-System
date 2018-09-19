@@ -2,8 +2,7 @@
 #	Libraries
 #------------------------------------------------------------------------------
 import os
-import numpy as np
-from PIL import Image
+import cv2
 from scipy.io import savemat
 from matplotlib import pyplot as plt
 from algorithm_wrapper import AlgorithmAPIs
@@ -21,8 +20,8 @@ API = AlgorithmAPIs(template_dir="templates",
 #	Registration section
 #------------------------------------------------------------------------------
 # Load image
-PIL_obj = Image.open("images/putin/putin1.jpg")
-img = np.array(PIL_obj)
+img = cv2.imread("images/putin/putin1.jpg")
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 # Bounding box
 face_locs = API.find_bbox(img)
@@ -51,8 +50,8 @@ plt.show()
 #	Identification section
 #------------------------------------------------------------------------------
 # Load image
-PIL_obj = Image.open("images/putin/putin2.jpg")
-img = np.array(PIL_obj)
+img = cv2.imread("images/putin/putin2.jpg")
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 # Bounding box
 face_locs = API.find_bbox(img)
