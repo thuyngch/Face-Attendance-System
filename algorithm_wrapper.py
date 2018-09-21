@@ -35,13 +35,13 @@ class AlgorithmAPIs(object):
 		# Create folder to store templates
 		if not os.path.exists(self.template_dir):
 			os.mkdir(self.template_dir)
-			print("[AlgorithmAPIs]Create folder %s" % (self.template_dir))
+			print("\n[Algorithm-APIs]Create folder %s" % (self.template_dir))
 
 		# Setup multiprocessing
 		if self.use_multiprocessing:
 			self.n_cpus = cpu_count()
 			self.pools = Pool(processes=self.n_cpus)
-			print("[AlgorithmAPIs]Create %d pools" % (self.n_cpus))
+			print("\n[Algorithm-APIs]Create %d pools" % (self.n_cpus))
 		else:
 			self.pools = None
 
