@@ -1,11 +1,10 @@
 # import the necessary packages
+from scipy import misc
 import numpy as np
 import dlib
 import cv2
 import glob
 import os
-from scipy import misc
-dlib.DLIB_USE_CUDA = True
 
 
 # initialize dlib's face detector (HOG-based) and then create
@@ -59,7 +58,6 @@ def get_rotation_matrix(p1, p2):
 def crop_image(image, det):
     left, top, right, bottom = rect_to_tuple(det)
     return image[top:bottom, left:right]
-
 
 def get_face(img):
 	height, width = img.shape[:2]
