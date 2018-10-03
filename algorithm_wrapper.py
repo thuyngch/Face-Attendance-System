@@ -30,10 +30,10 @@ class AlgorithmAPIs(object):
 		self.threshold = threshold
 		self.use_multiprocessing = use_multiprocessing
 
-		# Create folder to store templates
-		if not os.path.exists(self.template_dir):
-			os.mkdir(self.template_dir)
-			print("[AlgorithmAPIs]Create folder %s" % (self.template_dir))
+		# # Create folder to store templates
+		# if not os.path.exists(self.template_dir):
+		# 	os.mkdir(self.template_dir)
+		# 	print("[AlgorithmAPIs]Create folder %s" % (self.template_dir))
 
 		# Setup multiprocessing
 		if self.use_multiprocessing:

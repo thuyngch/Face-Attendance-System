@@ -8,7 +8,7 @@ from PyQt5.QtMultimedia import (QAudioEncoderSettings, QCamera,QCameraImageCaptu
         QMediaRecorder, QMultimedia, QVideoEncoderSettings)
 from PyQt5.QtWidgets import (QAction, QActionGroup, QApplication, QDialog,QMainWindow, QMessageBox)
 from ui_camera import Ui_Camera
-from ui_imagesettings import Ui_ImageSettingsUi
+# from ui_imagesettings import Ui_ImageSettingsUi
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QImage
@@ -23,10 +23,11 @@ import os
 import numpy as np
 import sys
 import sqlite3
-import pandas as pd
 import cv2
 
-
+from apis.motion_blur import detect_blur
+from apis.landmark import find_bbox, draw_bbox, check_front_view
+from apis.recognition import Recognizer
 
 
 try:
@@ -56,12 +57,10 @@ def db():
 
 
 def get_total(filepath,mssv):
-        
     file1 = AttendanceChecking(filepath)
     absent=file1.get_total_absence(mssv)
-    failcase=file1.start_checking([mssv])
+    # failcase=file1.start_checking([mssv])
     Camera.display_absences(camera,absent)
-    
 
 
 class OpenExcels(QWidget):
@@ -90,9 +89,8 @@ class OpenExcels(QWidget):
         if fileName:
             print(fileName)
             file_path = os.path.join(fileName)
-            get_total(file_path,1512872)
-
-            new_path = '../data/new.xlsx'
+            get_total(file_path, 1512872)
+            # new_path = '../data/new.xlsx'
 
 
 class ImageSettings(QDialog):
@@ -161,7 +159,7 @@ class Camera(QMainWindow):
         global API
         API = AlgorithmAPIs(template_dir="templates",
                     threshold=0.5,
-                    use_multiprocessing=True)
+                    use_multiprocessing=False)
         
         self.ui = Ui_Camera()
         
@@ -201,6 +199,14 @@ class Camera(QMainWindow):
         self.ui.lcdNumber_2.display(dial_value)
         self.setCamera(cameraDevice)
 
+
+        # Create and load model
+        path_pretrained = "apis/models/facenet/20180402-114759.pb"
+        path_SVM = "apis/models/SVM/SVM.pkl"
+        self.recognizer = Recognizer()
+        self.recognizer.create_graph(path_pretrained, path_SVM)
+
+
     def setCamera(self, cameraDevice):
          
         self.camera = cv2.VideoCapture(0)
@@ -221,6 +227,29 @@ class Camera(QMainWindow):
         
         ret,self.image= self.camera.read(0)
         self.image=cv2.flip(self.image,1)
+
+        # Remove motion-blur frame
+        if not detect_blur(self.image, thres=5.0):
+            face_locs = find_bbox(self.image)
+            n_faces = len(face_locs)
+            # Remove multi-face frame
+            if n_faces==1:
+                is_frontal, _ = check_front_view(self.image, face_locs)
+                # Remove non-frontal-view frame
+                if is_frontal:
+                    self.image, _, _ = draw_bbox(self.image, face_locs, color="green")
+                    image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+                    id, score = self.recognizer.recognize(image, (0,0,182,182), 0.29) 
+                    print("Student ID: %s, Score: %.4f" % (id, score))
+                else:
+                    print("Face is not in frontal view")
+            else:
+                print("Many faces in a frame")
+        else:
+            print("Frame is montion-blur")
+
+
+
         self.displayImage(self.image,1)
 
     def displayImage(self,img,window=1):
@@ -354,8 +383,7 @@ class Camera(QMainWindow):
 
 
 if __name__ == '__main__':
-    
-    import sys   
+
     app = QApplication(sys.argv)
     camera = Camera()
     camera.show()
