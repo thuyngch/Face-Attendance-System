@@ -1,0 +1,131 @@
+%------------------------------------------------------------------------------
+%	Setup
+%------------------------------------------------------------------------------
+\documentclass[journal, twocolumn]{IEEEtran}
+
+
+\usepackage{graphicx}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{amssymb}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{font=footnotesize}
+
+\usepackage{textcase}
+\usepackage[tablename=TABLE]{caption}
+\DeclareCaptionTextFormat{up}{\MakeTextUppercase{#1}}
+\captionsetup[table]{
+    labelsep=period,
+    justification=centering,
+    textformat=up,
+}
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%------------------------------------------------------------------------------
+%	Title
+%------------------------------------------------------------------------------
+\title{An Automatic Face Attendance Checking System using Deep Facial Recognition Technique}
+
+
+%------------------------------------------------------------------------------
+%	Author
+%------------------------------------------------------------------------------
+%\author{Thuy Nguyen-Chinh,
+%		Phuong Le-Van-Hoang,
+%		Sy Nguyen-Tan,
+%		Thien Do-Tieu,
+%		Qui Nguyen-Van,
+%		Phu Nguyen-Tan
+%
+%\thanks{This work is our assignment in the course of "Artificial Intelligence in Control Engineering" Sep-Dec 2018, guided by Dr. Pham Viet Cuong (email: pvcuong@hcmut.edu.vn), Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology.}
+%\thanks{Authors are senior students in the Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology (e-mail: \{thuy.ng.ch, tansyab1, dotieuthien9997, nvqui97, boycrkh97\}@gmail.com).}
+%\thanks{The software is open source and can be found in \url{https://github.com/AntiAegis/Face-Attendance-System}.}
+%}
+
+
+\maketitle
+
+
+%------------------------------------------------------------------------------
+%	Abstract
+%------------------------------------------------------------------------------
+\begin{abstract}
+Nowadays, as computers are powerful enough for implementing complex algorithms, there are a numerous number of applications that people utilize computers to run. In which, facial recognition is one of the most active fields of applications. In fact, computers can not only automatically identify who a person is, but also operate 24/7, which a person cannot endure. This leads to the replacement of people by computers in some repetative and realtime applications.
+
+In this work, we apply the facial recognition into an attendance checking system that uses faces of registered people to check their attendance. This system has a GUI in order to allow users interact with the system easily. The core of the system is a deep facial recognition technique, which has four stages (e.g., removing motion-blur frames, detecting faces, removing non-frontal-view faces, and recognizing). Particularly, in the recognition phase, we treat this stage as an open-set facial recognition problem, so the system is able to detect people who have not registered in the database before. Also, we boost performance of the system by utilizing hardware resources of user's computer. Although the system is designed to run with a low-resolution webcam, its performance is  quite accurate on a private dataset.
+\end{abstract}
+
+
+\begin{IEEEkeywords}
+Face Attendance Checking, Facial Recognition, Deep Learning
+\end{IEEEkeywords}
+
+
+\IEEEpeerreviewmaketitle
+
+
+%------------------------------------------------------------------------------
+%	Introduction
+%------------------------------------------------------------------------------
+\section{Introduction}
+\label{introduction}
+
+
+%------------------------------------------------------------------------------
+%	Proposed system
+%------------------------------------------------------------------------------
+\medskip
+\section{Proposed system}
+\label{proposed-system}
+
+
+%------------------------------------------------------------------------------
+%	Implementation
+%------------------------------------------------------------------------------
+\medskip
+\section{Implementation}
+\label{implementation}
+
+\subsection{Motion-blur detection}
+\label{motion-blur-detection}
+
+\subsection{Face detection}
+\label{face-detection}
+
+\subsection{Frontal-view detection}
+\label{frontal-view-detection}
+
+\subsection{Face recognition}
+\label{face-recognition}
+
+\subsection{Graphic User Interface}
+\label{gui}
+
+\subsection{Attendance management}
+\label{attendance-management}
+
+
+%------------------------------------------------------------------------------
+%	Result
+%------------------------------------------------------------------------------
+\medskip
+\section{Experimental result}
+\label{experimental-result}
+
+
+%------------------------------------------------------------------------------
+% References
+%------------------------------------------------------------------------------
+\begin{thebibliography}{9}
+\input{bibliography.tex}
+\end{thebibliography}
+
+\end{document}
