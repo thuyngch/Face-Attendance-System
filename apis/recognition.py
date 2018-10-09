@@ -22,8 +22,12 @@ class Recognizer:
 		self.phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
 		embedding_size = self.embeddings.get_shape()[1]
 		self.emb_array = np.zeros((1, embedding_size))
-		gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
-		self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+		if (tf.test.is_gpu_available()):
+			config = tf.ConfigProto()
+			config.gpu_options.allow_growth = True
+			self.session = tf.Session(config=config, ...)
+		else:
+			self.sess = tf.Session()
 		# load SVM model 
 		classifier_filename = path_SVM
 		classifier_filename_exp = os.path.expanduser(classifier_filename)
