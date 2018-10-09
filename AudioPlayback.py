@@ -13,8 +13,6 @@ class AudioPlayback:
         mixer.init()
         mixer.music.load(audio_path)
         mixer.music.play(1)
-        while mixer.music.get_busy():
-            continue
 
     @staticmethod
     def stop():
