@@ -25,7 +25,7 @@ class Recognizer:
 		if (tf.test.is_gpu_available()):
 			config = tf.ConfigProto()
 			config.gpu_options.allow_growth = True
-			self.session = tf.Session(config=config, ...)
+			self.session = tf.Session(config=config)
 		else:
 			self.sess = tf.Session()
 		# load SVM model 
@@ -36,6 +36,7 @@ class Recognizer:
 
 
 	def recognize(self, frame, face_location, thres):
+		frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 		y_left_top = face_location[0] 
 		x_left_top = face_location[1] 
 		height = face_location[2] 
