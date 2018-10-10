@@ -25,7 +25,7 @@ class Recognizer:
 		if (tf.test.is_gpu_available()):
 			config = tf.ConfigProto()
 			config.gpu_options.allow_growth = True
-			self.session = tf.Session(config=config)
+			self.sess = tf.Session(config=config)
 		else:
 			self.sess = tf.Session()
 		# load SVM model 
