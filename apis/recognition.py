@@ -36,11 +36,18 @@ class Recognizer:
 
 
 	def recognize(self, frame, face_location, thres):
-		frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+		"""
+		Arguments:
+			image : (ndarray) RGB image with shape of [width, height, channel].
+			face_loc : (list) Coordinates of a bounding box of the format
+			(y_top, x_left, width, height).
+		Return:
+			student_id : (str) Student id of the recognized person.
+		"""
 		y_left_top = face_location[0] 
 		x_left_top = face_location[1] 
-		height = face_location[2] 
-		width = face_location[3] 
+		height = face_location[3] 
+		width = face_location[2] 
 		cropped = []
 		scaled = []
 		scaled_reshape = []
