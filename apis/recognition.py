@@ -66,7 +66,7 @@ class Recognizer:
 		if best_class_probabilities < thres:
 			result_name = "unknown" 
 		else:
-			result_name = self.dataset[best_class_indices[0]].name 
+			result_name = self.class_names[best_class_indices[0]]
 		return result_name, best_class_probabilities
 
 
