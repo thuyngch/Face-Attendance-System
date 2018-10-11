@@ -50,9 +50,9 @@ class Recognizer:
 		width = face_location[0][2] 
 		cropped = []
 		scaled = []
-		scaled_reshape = []
+		scaled_reshape = [] 
 		cropped.append(frame[y_left_top:(y_left_top + height), x_left_top:(x_left_top + width), :])
-		cropped[0] = facenet.flip(cropped[0], False) 
+		# cropped[0] = facenet.flip(cropped[0], False) 
 		scaled.append(misc.imresize(cropped[0], (182, 182), interp='bilinear'))
 		scaled[0] = cv2.resize(scaled[0], (160, 160), interpolation=cv2.INTER_CUBIC)
 		scaled[0] = facenet.prewhiten(scaled[0])
