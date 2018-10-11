@@ -195,7 +195,7 @@ class Camera(QMainWindow):
 
 					self.image, _, _ = draw_bbox(self.image, face_locs, color="green")
 					image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-					id, score = self.recognizer.recognize(image, face_locs, 0.29)
+					id, score = self.recognizer.recognize(image, face_locs, 0.285)
 					self.pre_id= self.cur_id
 					self.cur_id = id
 					dis_str= "Student ID: %s, Score: %.4f" % (id, score)

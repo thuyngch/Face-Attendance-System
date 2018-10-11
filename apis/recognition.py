@@ -34,7 +34,6 @@ class Recognizer:
 		with open(classifier_filename_exp, 'rb') as infile:
 			(self.model, self.class_names) = pickle.load(infile)
 
-
 	def recognize(self, frame, face_location, thres):
 		"""
 		Arguments:
