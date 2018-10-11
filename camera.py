@@ -94,6 +94,8 @@ class Camera(QMainWindow):
 		self.cur_id=0
 		self.count=0
 		self.checked=0
+		self.audio_settime = 0
+		self.allow_flag=1
 		self.check_list=[]
 		self.camera = None
 		self.imageCapture = None
@@ -215,7 +217,8 @@ class Camera(QMainWindow):
 
 								# popup after 5 times 
 								if self.count ==5:
-									mssv_check=self.correct_mssv(id)
+									id = int(id)
+									mssv_check=self.correct_mssv(int(id))
 									self.insert_to_db(mssv_check)
 
 									# display the number of absences
@@ -231,7 +234,18 @@ class Camera(QMainWindow):
 						self.ui.textBrowser.append("Student ID had been checked")    
 				else:
 					dis_str= "Face is not in frontal view"
-					# AudioPlayback(self.audios[2])
+
+					self.audio_settime+=1
+					if self.audio_settime >= 40:
+						self.allow_flag=1
+					
+					if self.allow_flag:
+						AudioPlayback(self.audios[2])
+						self.audio_settime=0
+						self.allow_flag = 0
+					else:
+						pass
+
 					self.ui.textBrowser.append(dis_str)
 			else:
 				dis_str= "Require 1 face in the camera"
@@ -268,10 +282,10 @@ class Camera(QMainWindow):
 	def insert_to_db(self,in_value):
 		with sqlite3.connect('.TempExcels.db') as db:
 			c = db.cursor()
-			c.execute('insert into Temp value (?)',in_value)
+			c.execute('insert into Temp values(?)',(in_value,))
 			db.commit()
 			c.close()
-			db.close()
+			# db.close()
 
 	def display_absences(self,absences):    
 		self.ui.absenceNumber.display(absences)
@@ -339,7 +353,7 @@ class Camera(QMainWindow):
 
 
 	def correct_mssv(self,mssv):
-		mssv_check, okPressed = QInputDialog.getInt(self, "Student confirm","MSSV:", mssv, 0, 10000000, 1)
+		mssv_check, okPressed = QInputDialog.getInt(self, "Student confirm","MSSV:", mssv, 0, 100000000, 1)
 		if okPressed:
 			return(mssv_check)
 
