@@ -5,7 +5,6 @@ import subprocess
 import sys
 from pathlib import Path
 from time import strftime, gmtime
-
 from dateutil import parser
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Border, Font, Alignment, GradientFill, PatternFill, Side
@@ -240,9 +239,9 @@ class AttendanceChecking:
         return strftime("%m/%d/%Y", gmtime())
 
     def update_total_col(
-        self, from_row, to_row, from_col, to_col, row_total_header, col_total_header
+        self, from_row, to_row, from_col, to_col, total_header=[]
     ):
-        for row in range(row_total_header, to_row - from_row + 1):
+        for row in range(total_header[0] + 1, to_row - from_row + 1):
             sum_func = (
                 "=COUNTBLANK("
                 + str(self.get_col_letter(from_col))
@@ -252,7 +251,7 @@ class AttendanceChecking:
                 + str(row)
                 + ")"
             )
-            self.sheet.cell(row, col_total_header).value = sum_func
+            self.sheet.cell(row, total_header[1]).value = sum_func
 
     def get_total_absence(self, mssv):
         """
@@ -279,6 +278,12 @@ class AttendanceChecking:
                 total_mssv += 1
         return total_mssv
 
+    def if_exist_table_header(self, value, cell=[]):
+        if self.sheet.cell(cell[0], cell[1]).value == value:
+            return True
+        else:
+            return False
+
     def start_checking(self, mssv_array=[]):
         """
         * Execute attendance checking for each id in ID column
@@ -301,39 +306,45 @@ class AttendanceChecking:
         if not self.if_exist_table_header(
             self.get_current_date(), [col_total[0], col_total[1] - 1]
         ):
+            # Shift col with header Total to one more col right
             self.shift_col_to_right(col_total[1], col_total[0])
+
+            # Insert new day header
             self.set_header(col_total[0], col_total[1], self.get_current_date())
+
+            # update indice for cell with header Total
             col_total = [col_total[0], col_total[1] + 1]
+
+            # format cell
             self.format_font(self.sheet, "header", [col_total[0], col_total[1]])
             self.format_border(self.sheet, "thin_border", [col_total[0], col_total[1]])
         else:
             new_checking = [col_total[0], col_total[1] - 1]
 
+        col_total[0] = new_checking[0]
+        col_total[1] = new_checking[1] + 1
+
+        # start mark attendace
         checked = False
         for id in mssv_array:
             for row in range(header_row + 1, self.sheet.max_row + 1):
                 if id == self.sheet.cell(row, id_col).value:
+                    # presence
                     self.sheet.cell(row, new_checking[1]).value = 1
                     checked = True
                     break
-            if checked:
+            if not checked:
                 failed_case.append(id)
 
-                self.update_total_col(
-                    col_total[0],
-                    self.sheet.max_row,
-                    group[1] + 1,
-                    new_checking[1],
-                    new_checking[0] + 1,
-                    new_checking[1] + 1,
-                )
+        # update Count function whether any data or not
+        self.update_total_col(
+            col_total[0],
+            self.sheet.max_row,
+            group[1] + 1,
+            new_checking[1],
+            col_total
+        )
 
         AttendanceChecking.page_setups(self.sheet)
         self.workbook.save(self.file_path)
         return failed_case
-
-    def if_exist_table_header(self, value, cell=[]):
-        if self.sheet.cell(cell[0], cell[1]).value == value:
-            return True
-        else:
-            return False
