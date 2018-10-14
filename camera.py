@@ -1,21 +1,11 @@
 
-##
 #############################################################################
 from PyQt5.QtCore import QByteArray, QTimer
-# from PyQt5.QtCore import QByteArray, qFuzzyCompare, Qt, QTimer
 from PyQt5.QtWidgets import QApplication
-# from PyQt5.QtWidgets import QApplication, QLCDNumber
 from PyQt5.QtGui import QPixmap
-# from PyQt5.QtGui import QPalette, QPixmap
 from PyQt5.QtMultimedia import QAudioEncoderSettings, QCamera, QImageEncoderSettings
-# from PyQt5.QtMultimedia import (QAudioEncoderSettings, QCamera,QCameraImageCapture, QImageEncoderSettings, QMediaMetaData,
-# 		QMediaRecorder, QMultimedia, QVideoEncoderSettings)
 from PyQt5.QtWidgets import QAction, QActionGroup, QMainWindow, QMessageBox
-# from PyQt5.QtWidgets import (QAction, QActionGroup, QApplication, QDialog,QMainWindow, QMessageBox)
 from PyQt5.QtWidgets import QWidget, QInputDialog, QFileDialog
-# from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog
-# from PyQt5.QtGui import QIcon
-# from PyQt5 import QtCore, QtGui , QtWidgets
 from PyQt5.QtGui import QImage
 from PyQt5 import QtCore, QtWidgets
 from ui_camera import Ui_Camera
@@ -78,8 +68,6 @@ class OpenExcels(QWidget):
 		if fileName:
 			print(fileName)
 			camera.file_path = os.path.join(fileName)
-			#get_total(file_path, 1512872)
-			# new_path = '../data/new.xlsx'
 			camera.check_db_table(camera.file_path)
 			camera.timer.start(5)
 
@@ -164,13 +152,11 @@ class Camera(QMainWindow):
 
 
 			self.ui.textBrowser.append("completely solved")
-			# print("completely solved")
 			c.execute('drop table if exists Temp')
 			c.execute('create table if not exists Temp(mssv INT NOT NULL)')
 			self.ui.textBrowser.append("create a new table - Ready to start")
 		else:
 			self.ui.textBrowser.append("Data cleared - Ready to start")
-			# print("data cleared")
 			c.execute('create table if not exists Temp(mssv INT NOT NULL)')
 		db.commit()
 		c.close()
@@ -338,7 +324,7 @@ class Camera(QMainWindow):
 				c = db.cursor()
 				c.execute("SELECT * FROM Temp")
 				for row in c.fetchall():
-					mssv.append(row)
+					mssv.append(row[0])
 				if mssv:
 					filecheck = AttendanceChecking(filepath)
 					failcases=filecheck.start_checking(mssv)
