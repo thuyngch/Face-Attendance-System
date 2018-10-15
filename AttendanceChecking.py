@@ -161,23 +161,27 @@ class AttendanceChecking:
         if not hasattr(self, "sheet"):
             return False
 
-        # Column ID
-        id = self.get_cell_index(self.sheet, "ID")
+        try:
+            # Column ID
+            id = self.get_cell_index(self.sheet, "ID")
 
-        # Column Last Name
-        last_name = self.get_cell_index(self.sheet, "Last Name")
+            # Column Last Name
+            last_name = self.get_cell_index(self.sheet, "Last Name")
 
-        # Column First Name
-        first_name = self.get_cell_index(self.sheet, "First Name")
+            # Column First Name
+            first_name = self.get_cell_index(self.sheet, "First Name")
 
-        # Column Group
-        group = self.get_cell_index(self.sheet, "Group")
+            # Column Group
+            group = self.get_cell_index(self.sheet, "Group")
 
-        # column Total
-        total = self.get_cell_index(self.sheet, "Total")
+            # column Total
+            total = self.get_cell_index(self.sheet, "Total")
 
-        # column next to one Total
-        next_total = self.sheet.cell(total[0], total[1] + 1).value
+            # column next to one Total
+            next_total = self.sheet.cell(total[0], total[1] + 1).value
+
+        except TypeError:
+            return False
 
         if (
                 (id == -1)
