@@ -1,23 +1,18 @@
-
-#############################################################################
 from PyQt5.QtCore import QByteArray, QTimer
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtMultimedia import QAudioEncoderSettings, QCamera, QImageEncoderSettings
+from PyQt5.QtMultimedia import QCamera
 from PyQt5.QtWidgets import QAction, QActionGroup, QMainWindow, QMessageBox
 from PyQt5.QtWidgets import QWidget, QInputDialog, QFileDialog
 from PyQt5.QtGui import QImage
 from PyQt5 import QtCore, QtWidgets
 from ui_camera import Ui_Camera
-
-import os, sys, sqlite3, cv2
-
 from apis.motion_blur import detect_blur
 from apis.landmark import find_bbox, draw_bbox, check_front_view
 from apis.recognition import Recognizer
-
 from AudioPlayback import AudioPlayback
 from AttendanceChecking import AttendanceChecking
+import os, sys, sqlite3, cv2
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -37,10 +32,8 @@ except AttributeError:
 def get_total(filepath,mssv):
 	file1 = AttendanceChecking(filepath)
 	absent=file1.get_total_absence(mssv)
-	# failcase=file1.start_checking([mssv])
 	Camera.display_absences(camera,absent)
 	
-
 
 class OpenExcels(QWidget):
  
@@ -53,24 +46,59 @@ class OpenExcels(QWidget):
 		self.height = 480
   
  
-	def initUI(self):
+	def openinitUI(self):
 		self.setWindowTitle(self.title)
 		self.setGeometry(self.left, self.top, self.width, self.height)
- 
-		self.openFileNameDialog()
- 
+		self.openFileNameDialog() 
+		self.show()
+
+
+	def saveinitUI(self):
+		self.setWindowTitle(self.title)
+		self.setGeometry(self.left, self.top, self.width, self.height)
+		self.saveFileDialog()
 		self.show()
  
-	def openFileNameDialog(self):    
+
+	def openFileNameDialog(self):
+
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx);;Excel 97-2003 Workbook (*.xls);;XML Data (*.xml);;CSV file (*.csv)", options=options)
-		if fileName:
-			print(fileName)
-			camera.file_path = os.path.join(fileName)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx)", options=options)
+		camera.file_path = os.path.join(fileName)
+
+		while camera.file_path:
+			if not camera.file_path.endswith('.xlsx'):
+				QMessageBox.warning(self, 'File Type Warning', ' Wrong Type Selected') 
+				fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx)", options=options)		
+				camera.file_path = os.path.join(fileName)
+				if camera.file_path == "":
+					break
+				continue
+			file2= AttendanceChecking(camera.file_path)
+			if not file2.if_standard_excel():
+				QMessageBox.warning(self, 'File Content Warning', ' Wrong File Content') 
+				fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx)", options=options)		
+				camera.file_path = os.path.join(fileName)
+				continue
+			else:
+				break
+		if camera.file_path:	
 			camera.check_db_table(camera.file_path)
 			camera.timer.start(5)
 
+
+	def saveFileDialog(self):
+
+		options = QFileDialog.Options()
+		options |= QFileDialog.DontUseNativeDialog
+		fileName, _ = QFileDialog.getSaveFileName(self,"Save Template","","All Files (*);;Excel Files (*.xlsx)", options=options)
+		if fileName:
+		    camera.save_path = os.path.join(fileName)
+		    file3= AttendanceChecking(camera.save_path)		    
+		    if not camera.save_path.endswith('.xlsx'):
+		    	camera.save_path+=".xlsx"
+		    file3.new_standard_file(camera.save_path)
 
 
 class Camera(QMainWindow):
@@ -89,28 +117,22 @@ class Camera(QMainWindow):
 		self.imageCapture = None
 		self.isCapturingImage = False
 		self.applicationExiting = False
-		self.imageSettings = QImageEncoderSettings()
-		self.audioSettings = QAudioEncoderSettings()
 		self.ui.setupUi(self)
 		cameraDevice = QByteArray()
 		videoDevicesGroup = QActionGroup(self)
 		videoDevicesGroup.setExclusive(True)
-
 		for deviceName in QCamera.availableDevices():
 			description = QCamera.deviceDescription(deviceName)
 			videoDeviceAction = QAction(description, videoDevicesGroup)
 			videoDeviceAction.setCheckable(True)
 			videoDeviceAction.setData(deviceName)
-
 			if cameraDevice.isEmpty():
 				cameraDevice = deviceName
 				videoDeviceAction.setChecked(True)
-
 			self.ui.menuDevices.addAction(videoDeviceAction)
-
 		videoDevicesGroup.triggered.connect(self.updateCameraDevice)
 		self.setCamera(cameraDevice)
-
+		
 		# Create and load model
 		path_pretrained = "apis/models/facenet/20180402-114759.pb"
 		path_SVM = "apis/models/SVM/SVM.pkl"
@@ -133,7 +155,6 @@ class Camera(QMainWindow):
 		self.timer.stop()
 
 
-
 	def check_db_table(self,filepath):
 		
 		mssv=[]
@@ -143,14 +164,18 @@ class Camera(QMainWindow):
 		exist = c.fetchone()
 		if exist :
 			self.ui.textBrowser.append("unsolved data")
-			# print("unsolved data")
 			c.execute("SELECT * FROM Temp")
 			for row in c.fetchall():
 				mssv.append(row)
 			filecheck = AttendanceChecking(filepath)
 			failcases=filecheck.start_checking(mssv)
-
-
+			fail_str = "Incomplete IDs:\n"
+			if failcases:
+				for failcase in failcases:
+					fail_str= fail_str + str(failcase)+"\n"
+				
+				QMessageBox.warning(self, 'Failcase list', fail_str)
+				
 			self.ui.textBrowser.append("completely solved")
 			c.execute('drop table if exists Temp')
 			c.execute('create table if not exists Temp(mssv INT NOT NULL)')
@@ -163,12 +188,10 @@ class Camera(QMainWindow):
 		db.close()
 
 
-
 	def update_frame(self):
 		
 		ret,self.image= self.camera.read(0)
 		self.image=cv2.flip(self.image,1)
-
 		# Remove motion-blur frame
 		if not detect_blur(self.image, thres=5.0):
 			face_locs = find_bbox(self.image)
@@ -178,14 +201,12 @@ class Camera(QMainWindow):
 				is_frontal, _ = check_front_view(self.image, face_locs)
 				# Remove non-frontal-view frame
 				if is_frontal:
-
 					self.image, _, _ = draw_bbox(self.image, face_locs, color="green")
 					image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-					id, score = self.recognizer.recognize(image, face_locs, 0.277)
+					id, score = self.recognizer.recognize(image, face_locs, 0.285)
 					self.pre_id= self.cur_id
 					self.cur_id = id
 					dis_str= "Student ID: %s, Score: %.4f" % (id, score)
-
 					# Verification: ID was checked or not 
 					self.ui.textBrowser.append(dis_str)
 					for check_idx in self.check_list:
@@ -196,17 +217,14 @@ class Camera(QMainWindow):
 					# Process if ID has not been checked
 					if not self.checked:
 						if not id== "unknown":
-
 							# positive ID 
 							if self.pre_id==self.cur_id:
 								self.count+=1
-
 								# popup after 5 times 
 								if self.count ==5:
 									id = int(id)
 									mssv_check=self.correct_mssv(int(id))
 									self.insert_to_db(mssv_check)
-
 									# display the number of absences
 									get_total(self.file_path,id)
 									self.check_list.append(id)
@@ -220,18 +238,15 @@ class Camera(QMainWindow):
 						self.ui.textBrowser.append("Student ID had been checked")    
 				else:
 					dis_str= "Face is not in frontal view"
-
 					self.audio_settime+=1
 					if self.audio_settime >= 40:
 						self.allow_flag=1
-					
 					if self.allow_flag:
 						AudioPlayback(self.audios[2])
 						self.audio_settime=0
 						self.allow_flag = 0
 					else:
 						pass
-
 					self.ui.textBrowser.append(dis_str)
 			else:
 				dis_str= "Require 1 face in the camera"
@@ -239,9 +254,7 @@ class Camera(QMainWindow):
 		else:
 			dis_str= "Frame is montion-blurred"
 			self.ui.textBrowser.append(dis_str)
-
 		self.displayImage(self.image,1)
-
 
 
 	def displayImage(self,img,window=1):
@@ -254,16 +267,20 @@ class Camera(QMainWindow):
 				qformat = QImage.Format_RGB888
 		outImage=QImage(img,img.shape[1],img.shape[0],img.strides[0],qformat)
 		outImage = outImage.rgbSwapped()
-		if window ==1:
-		 
+		if window ==1:		 
 			self.ui.img_label.setPixmap(QPixmap.fromImage(outImage))
 			self.ui.img_label.setScaledContents(True)
 
 
-		
 	def configureOpenExcels(self):
 		settingsopenexcelDialog = OpenExcels()
-		settingsopenexcelDialog.initUI()
+		settingsopenexcelDialog.openinitUI()
+
+
+	def configureSavetemplate(self):
+		settingssaveexcelDialog= OpenExcels()
+		settingssaveexcelDialog.saveinitUI()
+
 
 	def insert_to_db(self,in_value):
 		with sqlite3.connect('.TempExcels.db') as db:
@@ -271,7 +288,7 @@ class Camera(QMainWindow):
 			c.execute('insert into Temp values(?)',(in_value,))
 			db.commit()
 			c.close()
-			# db.close()
+
 
 	def display_absences(self,absences):    
 		self.ui.absenceNumber.display(absences)
@@ -287,12 +304,14 @@ class Camera(QMainWindow):
 		else:
 			self.timer.start(5)
 
+
 	def stopCamera(self):
 		self.timer.stop()
 
 
 	def displayCameraError(self):
 		QMessageBox.warning(self, "Camera error", self.camera.errorString())
+
 
 	def updateCameraDevice(self, action):
 		self.setCamera(action.data())
@@ -304,12 +323,12 @@ class Camera(QMainWindow):
 			self.Save_to_excel(self.file_path)
 		sys.exit()
 
+
 	def closeEvent(self, event):
 		
 		reply = QMessageBox.question(self, 'Message',
 			"Are you sure to quit?", QMessageBox.Yes | 
 			QMessageBox.No, QMessageBox.No)
-
 		if reply == QMessageBox.Yes:
 			if self.file_path:
 				self.Save_to_excel(self.file_path)
@@ -318,6 +337,7 @@ class Camera(QMainWindow):
 			event.ignore()  
 
 	def Save_to_excel(self,filepath):
+
 		if self.file_path:
 			mssv=[]
 			with sqlite3.connect('.TempExcels.db') as db:
@@ -328,6 +348,12 @@ class Camera(QMainWindow):
 				if mssv:
 					filecheck = AttendanceChecking(filepath)
 					failcases=filecheck.start_checking(mssv)
+					fail_str = "Incomplete IDs:\n"
+					if failcases:
+						for failcase in failcases:
+							fail_str= fail_str + str(failcase)+"\n"
+						
+						QMessageBox.warning(self, 'Failcase list', fail_str)
 					c.execute('drop table if exists Temp')
 				else:
 					self.ui.textBrowser.append("There is nothing to save")
