@@ -203,11 +203,7 @@ class Camera(QMainWindow):
 				if is_frontal:
 					self.image, _, _ = draw_bbox(self.image, face_locs, color="green")
 					image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-<<<<<<< HEAD
 					id, score = self.recognizer.recognize(image, face_locs, 0.18825)
-=======
-					id, score = self.recognizer.recognize(image, face_locs, 0.285)
->>>>>>> 4011e3c0abde5fc0219590b8526562819ced1ff8
 					self.pre_id= self.cur_id
 					self.cur_id = id
 					dis_str= "Student ID: %s, Score: %.4f" % (id, score)
