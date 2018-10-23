@@ -30,6 +30,14 @@ except AttributeError:
 
 
 def get_total(filepath,mssv):
+	"""[get absent times]
+	
+	[fetch absent value from excels file and screen them]
+	
+	Arguments:
+		filepath {[string]} -- [excels file]
+		mssv {[int]} -- [student ID]
+	"""
 	file1 = AttendanceChecking(filepath)
 	absent=file1.get_total_absence(mssv)
 	Camera.display_absences(camera,absent)
@@ -61,6 +69,10 @@ class OpenExcels(QWidget):
  
 
 	def openFileNameDialog(self):
+		"""[show dialog to open file]
+		
+		[Unless the file is correct in terms of content and form, progress will not start ]
+		"""
 
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
@@ -89,6 +101,11 @@ class OpenExcels(QWidget):
 
 
 	def saveFileDialog(self):
+		"""[show dialog to save file]
+		
+		[Save exist template to location as specified by the user
+		the type of file is .xlsx]
+		"""
 
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
@@ -145,6 +162,13 @@ class Camera(QMainWindow):
 
 
 	def setCamera(self, cameraDevice):
+		'''[setup camera]
+		
+		[correct camera parameters]
+		
+		Arguments:
+			cameraDevice -- [laptop camera]
+		'''
 		 
 		self.camera = cv2.VideoCapture(0)
 		self.image = None
@@ -156,6 +180,13 @@ class Camera(QMainWindow):
 
 
 	def check_db_table(self,filepath):
+		'''[check if there is table.]
+		
+		[if there is table, save to excel then blank new table, if there isn't table create new table.]
+		
+		Arguments:
+			filepath {[string]} -- [excel path]
+		'''
 		
 		mssv=[]
 		with sqlite3.connect('.TempExcels.db') as db:
@@ -189,6 +220,10 @@ class Camera(QMainWindow):
 
 
 	def update_frame(self):
+		'''[process frame]
+		
+		[face recognition ]
+		'''
 		
 		ret,self.image= self.camera.read(0)
 		self.image=cv2.flip(self.image,1)
@@ -258,6 +293,17 @@ class Camera(QMainWindow):
 
 
 	def displayImage(self,img,window=1):
+
+		"""[display frame]
+		
+		[correct image type and on-screen display]
+		
+		Arguments:
+			img {[cv2 image]} -- [processed frame]
+		
+		Keyword Arguments:
+			window {number} -- [description] (default: {1})
+		"""
 		
 		qformat= QImage.Format_Indexed8
 		if len(img.shape) == 3:
@@ -273,16 +319,31 @@ class Camera(QMainWindow):
 
 
 	def configureOpenExcels(self):
+
+		"""[config to open File]
+		
+		"""
 		settingsopenexcelDialog = OpenExcels()
 		settingsopenexcelDialog.openinitUI()
 
 
 	def configureSavetemplate(self):
+
+		"""[config to save File]
+		
+		"""
 		settingssaveexcelDialog= OpenExcels()
 		settingssaveexcelDialog.saveinitUI()
 
 
 	def insert_to_db(self,in_value):
+		"""[save value to .db file]
+		
+		[Student IDs received after recognising will be saved to a temp table called Temp ]
+		
+		Arguments:
+			in_value {[int]} -- [(int)value to save into .db file ]
+		"""
 		with sqlite3.connect('.TempExcels.db') as db:
 			c = db.cursor()
 			c.execute('insert into Temp values(?)',(in_value,))
@@ -290,7 +351,15 @@ class Camera(QMainWindow):
 			c.close()
 
 
-	def display_absences(self,absences):    
+	def display_absences(self,absences):
+		"""[display the number of absences]
+		
+		[The number of absences of each ID will be on-screen 
+		if absent times >= threshold, a notification will appear on the screen]
+		
+		Arguments:
+			absences {[int]} -- [absent times]
+		"""
 		self.ui.absenceNumber.display(absences)
 		if absences == 3:
 			QMessageBox.warning(self, 'Absent Warning', 'This is your last absence') 
@@ -299,6 +368,10 @@ class Camera(QMainWindow):
 	
 
 	def startCamera(self):
+		"""[start camera]
+		
+		[Unless file path is invalid, camera is closed]
+		"""
 		if not self.file_path:
 			QMessageBox.warning(self, "Missing Excel file", "Open Excel File to Start Camera")
 		else:
@@ -314,10 +387,21 @@ class Camera(QMainWindow):
 
 
 	def updateCameraDevice(self, action):
+		"""[update camera]
+		
+		[Look for active cameras]
+		
+		Arguments:
+			action  -- [flag of a active camera]
+		"""
 		self.setCamera(action.data())
 
 
 	def close(self):
+		"""[close event]
+		
+		[if there is a close event,data in the table will be saved to excel file  ]
+		"""
 		QtCore.QCoreApplication.instance().quit
 		if self.file_path:
 			self.Save_to_excel(self.file_path)
@@ -325,6 +409,14 @@ class Camera(QMainWindow):
 
 
 	def closeEvent(self, event):
+		"""[close event ]
+		
+		[if we have a force exit event, a notification will be display for checking quit action
+		if event is accepted, data will be saved and program close ]
+		
+		Arguments:
+			event {[event]} -- [exit event from click (X)]
+		"""
 		
 		reply = QMessageBox.question(self, 'Message',
 			"Are you sure to quit?", QMessageBox.Yes | 
@@ -337,6 +429,13 @@ class Camera(QMainWindow):
 			event.ignore()  
 
 	def Save_to_excel(self,filepath):
+		"""[save data to excels]
+		
+		[Fetch data from table and save them to Excels]
+		
+		Arguments:
+			filepath {[string]} -- [Excel file path]
+		"""
 
 		if self.file_path:
 			mssv=[]
@@ -365,6 +464,14 @@ class Camera(QMainWindow):
 
 
 	def correct_mssv(self,mssv):
+		"""[confirm student ID]
+		
+		[confirm recognised student ID
+		if ID is wrong, fill out another one and press Enter]
+		
+		Arguments:
+			mssv {[int]} -- [student ID]
+		"""
 		mssv_check, okPressed = QInputDialog.getInt(self, "Student confirm","MSSV:", mssv, 0, 100000000, 1)
 		if okPressed:
 			return(mssv_check)
