@@ -38,17 +38,17 @@
 %------------------------------------------------------------------------------
 %	Author
 %------------------------------------------------------------------------------
-%\author{Thuy Nguyen-Chinh,
-%		Thien Do-Tieu,
-%		Phuong Le-Van-Hoang,
-%		Sy Nguyen-Tan,
-%		Qui Nguyen-Van,
-%		Phu Nguyen-Tan
-%
-%\thanks{This work is our assignment in the course of "Artificial Intelligence in Control Engineering" Sep-Dec 2018, guided by Dr. Pham Viet Cuong (email: pvcuong@hcmut.edu.vn), Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology.}
-%\thanks{Authors are senior of the Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology (e-mail: \{thuy.ng.ch, dotieuthien9997, tansyab1, nvqui97, boycrkh97\}@gmail.com).}
-%\thanks{The software is open source and can be found in \url{https://github.com/AntiAegis/Face-Attendance-System}.}
-%}
+\author{Thuy Nguyen-Chinh,
+		Thien Do-Tieu,
+		Phuong Le-Van-Hoang,
+		Sy Nguyen-Tan,
+		Qui Nguyen-Van,
+		Phu Nguyen-Tan
+
+\thanks{This work is our assignment in the course of "Artificial Intelligence in Control Engineering" Sep-Dec 2018, guided by Dr. Pham Viet Cuong (email: pvcuong@hcmut.edu.vn), Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology.}
+\thanks{Authors are senior of the Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology (e-mail: \{thuy.ng.ch, dotieuthien9997, tansyab1, nvqui97, boycrkh97\}@gmail.com).}
+\thanks{The software is open source and can be found in \url{https://github.com/AntiAegis/Face-Attendance-System}.}
+}
 
 
 \maketitle
@@ -94,7 +94,10 @@ Introduce about a framework of face recognition system, including face detection
 \medskip
 \section{Proposed system}
 \label{proposed-system}
-\textbf{This section is of Thuy.}
+
+In this paper, we apply deep facial recognition techniques into the problem of face attendance checking. A system is built in order to manage appearances of students in a class. As normally, the system is organized as a pipeline of typical stages, namely face detection, landmark detection, and face recognition. However, to ensure input frames for underlying algorithms are high quality, we append an early filter that are able to discard blur frames, which are caught by motions of people in front of a standard webcam. Besides, we take a more step by adapting the landmark detection to verify whether a face is in frontal view of the camera so that the result of face recognition is more accurate. Also, to leverage the ease in use, the design a friendly graphic user interface (GUI) so that people who want to use the system to manage (teachers) or check (students) attendance can interact with the application without any specific knowledge. To make the system more robust, we carefully analyze the distribution outlier of features representing for registered accounts. Therefore, the algorithm has ability to detect people who have not registered in the application before, which is equivalent to the open-set problem in face recognition. Figure \ref{fig:system} reveals our proposed system.
+
+Our work is organized as follows. In the section \ref{implementation}, stages of the proposed system are described clearly, including motion-blur detection, face detection, frontal-view detection, and face recognition. Then, section \ref{experimental-result} is for reporting some experimental results.
 
 
 %------------------------------------------------------------------------------
@@ -174,6 +177,15 @@ After attendance checking process is completed, the Total column will display th
 \section{Experimental result}
 \label{experimental-result}
 \textbf{This section is of Thien.}
+
+
+%------------------------------------------------------------------------------
+%	Conclusion
+%------------------------------------------------------------------------------
+\medskip
+\section{Conclusion}
+\label{conclusion}
+\textbf{This section is of Thuy.}
 
 
 %------------------------------------------------------------------------------
