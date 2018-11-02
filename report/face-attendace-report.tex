@@ -120,6 +120,10 @@ Our work is organized as follows. In the section \ref{implementation}, stages of
 \label{motion-blur-detection}
 \textbf{This section is of Phu.}
 
+The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. 
+
+So as to detect whether an image is blurred, we use the 2D-FFT method. We will compute mean amplitude spectrum value of entire pixel in image and compare them to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
+
 \subsection{Face detection}
 \label{face-detection}
 \textbf{This section is of Qui.}

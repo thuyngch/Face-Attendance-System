@@ -246,7 +246,7 @@ class Camera(QMainWindow):
 					self.ui.textBrowser.append(dis_str)
 					for check_idx in self.check_list:
 						if check_idx == id  :
-							self.checked =1
+							self.checked = True
 						else:
 							pass
 					# Process if ID has not been checked
@@ -262,7 +262,9 @@ class Camera(QMainWindow):
 									self.insert_to_db(mssv_check)
 									# display the number of absences
 									get_total(self.file_path,id)
-									self.check_list.append(id)
+									self.check_list.append(mssv_check)
+									print(self.check_list)
+									self.checked =0
 								else:
 									pass
 							else:
@@ -475,6 +477,8 @@ class Camera(QMainWindow):
 		mssv_check, okPressed = QInputDialog.getInt(self, "Student confirm","MSSV:", mssv, 0, 100000000, 1)
 		if okPressed:
 			return(mssv_check)
+		else:
+			return(mssv)
 
 
 
