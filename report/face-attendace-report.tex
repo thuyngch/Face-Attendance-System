@@ -187,10 +187,9 @@ All of the pre-processing steps are automatically implemented before using Dlib 
 To check whether the shape of the faces has to be frontal, we implement these 3 following steps:
 \begin{enumerate}[Step 1.]
 	\item Focusing on the center of the image. Only accept these faces that locate in the most central of the images. $((120-360), (90,360))$
-	\item Identify the skew of the image: calculate the coordinate of these eyes and the angle deviation between two eyes in the horizontal direction.
-	\item Identify the rotation of the image: defining of the midpoint of the face is the midpoint of the distance between the right and left eye.	
+	\item Identify the skew of the image: calculate the coordinate of these eyes and the angle deviation between two eyes in the horizontal direction. If the angle deviation is larger than 10 degree, the image will be ignored.
+	\item Identify the rotation of the image: choose the point which is the midpoint of the right and the left eye. If the nose which is deviated from the selected point is greater than 10 pixels in the horizontal direction, the image is ignored.
 \end{enumerate}
-If the nose is deviated from the midpoint of the face by more than 20 pixels or the deviation between the noise and the bound of the faces are larger than 20, we could ignore these conditions.\\
 These steps are implemented based on 5-point facial landmark technique with Dlib library instead of 68-point facial landmark in order to improve performance. If the image satisfies the condition, it will be accepted.
 
 
