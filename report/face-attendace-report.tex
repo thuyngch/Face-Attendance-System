@@ -103,9 +103,18 @@ DB dataset is high enough to represent the perfection of model.
 \section{Proposed system}
 \label{proposed-system}
 
-In this paper, we apply deep facial recognition techniques into the problem of face attendance checking. A system is built in order to manage appearances of students in a class. As normally, the system is organized as a pipeline of typical stages, namely face detection, landmark detection, and face recognition. However, to ensure input frames for underlying algorithms are high quality, we append an early filter that are able to discard blur frames, which are caught by motions of people in front of a standard webcam. Besides, we take a more step by adapting the landmark detection to verify whether a face is in frontal view of the camera so that the result of face recognition is more accurate. Also, to leverage the ease in use, the design a friendly graphic user interface (GUI) so that people who want to use the system to manage (teachers) or check (students) attendance can interact with the application without any specific knowledge. To make the system more robust, we carefully analyze the distribution outlier of features representing for registered accounts. Therefore, the algorithm has ability to detect people who have not registered in the application before, which is equivalent to the open-set problem in face recognition. Figure \ref{fig:system} reveals our proposed system.
+In this paper, we apply deep facial recognition techniques into the problem of face attendance checking. A system is built in order to manage appearances of students in a class, which is revealed in Fig. \ref{fig:system}. As normally, a facial recognition system is organized as a pipeline of typical stages such as face detection, landmark detection, and face recognition. However, to ensure input frames for underlying algorithms are high quality, we append an early filter (the Blur detection stage) that are able to discard blur frames, which are caught by motions of people in front of a standard webcam. Then, clean frames are passed through the Face detection block to count the number of faces existing inside these frames. In our specific case, there is only one face per frame allowed to be processed, so frames that contain more than one faces are rejected by the block. Afterward, the Landmark detection is to localize statistic-salient points in the face in order to verify whether the face is in frontal view of the camera. This frontal-view check will help improve the accuracy of the face recognition algorithm. Finally, the Face recognition uses blur-clean, one-face, and frontal-view frames from previous stages to extract relevant features and then perform a classification task to indicate which category the input most likely belong to.
+
+In addition, to leverage the ease in use, we design a friendly graphic user interface (GUI) so that people who want to use the system to manage (teachers) or check (students) attendance can interact with the application without any specific knowledge. To make the system more robust, we carefully analyze the distribution outlier of features representing for registered accounts. Therefore, the algorithm has ability to detect people who have not registered in the application before, which is equivalent to the open-set problem in face recognition.
 
 Our work is organized as follows. In the section \ref{implementation}, stages of the proposed system are described clearly, including motion-blur detection, face detection, frontal-view detection, and face recognition. Then, section \ref{experimental-result} is for reporting some experimental results.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/system-pipeline.png}
+	\caption{The system pipeline. There are four stages, namely blur detection, face detection, landmark detection, and face recognition. These four blocks are in the descending order of size in the direction from input to output. This points out that our system are tougher to input frames from the camera when such frames passed through the system. Therefore, best frames are likely to be processed, which may improves the final recognition accuracy.}\label{fig:system}
+\end{figure}
 
 
 %------------------------------------------------------------------------------
@@ -119,17 +128,78 @@ Our work is organized as follows. In the section \ref{implementation}, stages of
 \label{motion-blur-detection}
 \textbf{This section is of Phu.}
 
-The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. 
+The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. So as to detect whether an image is blurred, we use the 2D-FFT (2D-Fast Fourier Transform) method.
 
-So as to detect whether an image is blurred, we use the 2D-FFT method. We will compute mean amplitude spectrum value of entire pixel in image and compare them to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
+ We will review about Fourier Transform of Images. To compute the Fourier transform of an image, you need to:
+\begin{itemize}
+\item Compute DFT of each row, in place.
+\item Compute DFT of each column, in place.
+\end{itemize}  
+
+When a signal is discrete and periodic, we use the discrete Fourier transform, or DFT.
+Suppose our signal is $a_n$ for $n=0 \ldots N-1$,
+and $a_n=a_{n+jN}$ for all $n$ and $j$.
+The spectrum of $a$ is:
+\begin{equation}
+A_k = \sum_{n=0}^{N-1} W_N^{kn} a_n
+\label{dft.eq}
+\end{equation}
+where
+$$
+W_N = e^{-i {2 \pi \over N}}
+$$
+and $W_N^k$ for $k=0 \ldots N-1$ are called the {\it Nth roots of unity}.
+The sequence $A_k$ is the discrete Fourier transform of the sequence $a_n$.
+Each is a sequence of $N$ complex numbers.
+
+The FFT is a fast algorithm for computing the DFT.
+If we take the 2-point DFT and 4-point DFT and generalize them
+to 8-point, 16-point, ..., $2^n$-point (n is an integer), we get the FFT algorithm.
+
+There are several ways to write an FFT. For instance, let $m$ be an integer and let $N=2^m$.
+Suppose that $x=[x_0,\ldots,x_{N-1}]$ is an $N$ dimensional complex vector.
+Let $\omega=\exp({-2\pi i\over N})$.  Then the DFT, $c= F_N(x)$ is given by
+\begin{equation}
+c_k={1\over N}\sum_{j=0}^{j=N-1}x_j\omega^{jk}.
+\end{equation}
+Let $n=N/2$, let $u$ and $v$ be $n$ dimensional vectors defined by 
+\begin{align}
+u_j&=x_j+x_{j+n},\ j=0,\ldots,n-1\\
+v_j&=(x_j-x_{j+n})\omega ^j,\ j=0,\ldots,n-1.
+\end{align}
+Then 
+\begin{align}
+c_{2j}={1\over 2}(F_n(u))_j,\ j=0,\ldots,n-1\\
+c_{2j+1}={1\over 2}(F_n(v))_j,\ j=0,\ldots,n-1.
+\end{align}
+
+To compute the DFT of an $N$-point sequence using equation (\ref{dft.eq})
+would take $(N^2)$ multiplies and adds.
+The FFT algorithm computes the DFT using $(N \log N)$ multiplies and adds.
+
+Practical issues:
+We translate the picture so that pixel (0,0), which now contains frequency $(\omega_x,\omega_y)=(0,0)$, moves to the center of the image. Then, we display pixel values proportional to
+log(magnitude) of each complex number. For color images, do the above to each of the three channels
+(R, G, and B) independently.
+
+Apply to our system, firstly, we calculate FFT of image. Secondly, we will compute mean amplitude spectrum value of entire pixel in image and. Finally, the result of this operation is compared to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
 
 \subsection{Face detection}
 \label{face-detection}
-\textbf{This section is of Qui.}
+In this paper, we have used Histogram of Oriented Gradients method for extracting features of the face and Linear Support Vector Machine (SVM) method for face detections.\\
+The implementation of this method using sliding window technique with the different sizes of the windows. Using the sliding window technique we could complete the calculation of HOG features, applied to detect and differentiate the face and the false face recognition using the SVM technique.\\
+All of the pre-processing steps are automatically implemented before using Dlib library with the input of being given facial images and the output of localization the identified faces.\\
 
 \subsection{Frontal-view detection}
 \label{frontal-view-detection}
-\textbf{This section is of Qui.}
+To check whether the shape of the faces has to be frontal, we implement these 3 following steps:
+\begin{enumerate}[Step 1.]
+	\item Focusing on the center of the image. Only accept these faces that locate in the most central of the images. $((120-360), (90,360))$
+	\item Identify the skew of the image: calculate the coordinate of these eyes and the angle deviation between two eyes in the horizontal direction. If the angle deviation is larger than 10 degree, the image will be ignored.
+	\item Identify the rotation of the image: choose the point which is the midpoint of the right and the left eye. If the nose which is deviated from the selected point is greater than 10 pixels in the horizontal direction, the image is ignored.
+\end{enumerate}
+These steps are implemented based on 5-point facial landmark technique with Dlib library instead of 68-point facial landmark in order to improve performance. If the image satisfies the condition, it will be accepted.
+
 
 \subsection{Face recognition}
 \label{face-recognition}
@@ -223,12 +293,12 @@ To be used by the system, the excel file must meet
 a stringent format made up of essential contents and be
 generated by the GUI. 
 
-Figure \ref{fig:form-new} depicts a new standard empty
-excel table generated by our GUI. After obtaining a new file, we should fill in the table with the desired data (Figure \ref{fig:form-data}). The most special things in this table are column ID and Total. 
+Fig. \ref{fig:form-new} depicts a new standard empty
+excel table generated by our GUI. After obtaining a new file, we should fill in the table with the desired data (Fig. \ref{fig:form-data}). The most special things in this table are column ID and Total. 
 ID is considered a primary key because the algorithm will mark the presence of a specific person via his ID. 
 To help the host in easy attendance management, we designed the column Total with a view to showing the number of absences in all.
 
-Figure \ref{fig:form-checked} depicts an excel file's content after a checking progress finished. 
+Fig. \ref{fig:form-checked} depicts an excel file's content after a checking progress finished. 
 The GUI will automatically insert the only one new day column between Group and Total ones and in the tail of previous checked day. 
 Letter 1 will be marked as presence in a cell of this column accordant to an ID. 
 After attendance checking process is completed, the Total column will display the number of absences of previous days and the current one. Smartly can it display as we specially assigned a size-dynamic sum function to each cell of this column.
