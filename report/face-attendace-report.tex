@@ -178,11 +178,21 @@ Apply to our system, firstly, we calculate FFT of image. Secondly, we will compu
 
 \subsection{Face detection}
 \label{face-detection}
-\textbf{This section is of Qui.}
+In this paper, we have used Histogram of Oriented Gradients method for extracting features of the face and Linear Support Vector Machine (SVM) method for face detections.\\
+The implementation of this method using sliding window technique with the different sizes of the windows. Using the sliding window technique we could complete the calculation of HOG features, applied to detect and differentiate the face and the false face recognition using the SVM technique.\\
+All of the pre-processing steps are automatically implemented before using Dlib library with the input of being given facial images and the output of localization the identified faces.\\
 
 \subsection{Frontal-view detection}
 \label{frontal-view-detection}
-\textbf{This section is of Qui.}
+To check whether the shape of the faces has to be frontal, we implement these 3 following steps:
+\begin{enumerate}[Step 1.]
+	\item Focusing on the center of the image. Only accept these faces that locate in the most central of the images. $((120-360), (90,360))$
+	\item Identify the skew of the image: calculate the coordinate of these eyes and the angle deviation between two eyes in the horizontal direction.
+	\item Identify the rotation of the image: defining of the midpoint of the face is the midpoint of the distance between the right and left eye.	
+\end{enumerate}
+If the nose is deviated from the midpoint of the face by more than 20 pixels or the deviation between the noise and the bound of the faces are larger than 20, we could ignore these conditions.\\
+These steps are implemented based on 5-point facial landmark technique with Dlib library instead of 68-point facial landmark in order to improve performance. If the image satisfies the condition, it will be accepted.
+
 
 \subsection{Face recognition}
 \label{face-recognition}
