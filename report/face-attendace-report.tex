@@ -119,9 +119,61 @@ Our work is organized as follows. In the section \ref{implementation}, stages of
 \label{motion-blur-detection}
 \textbf{This section is of Phu.}
 
-The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. 
+The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. So as to detect whether an image is blurred, we use the 2D-FFT (2D-Fast Fourier Transform) method.
 
-So as to detect whether an image is blurred, we use the 2D-FFT method. We will compute mean amplitude spectrum value of entire pixel in image and compare them to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
+ We will review about Fourier Transform of Images. To compute the Fourier transform of an image, you need to:
+\begin{itemize}
+\item Compute DFT of each row, in place.
+\item Compute DFT of each column, in place.
+\end{itemize}  
+
+When a signal is discrete and periodic, we use the discrete Fourier transform, or DFT.
+Suppose our signal is $a_n$ for $n=0 \ldots N-1$,
+and $a_n=a_{n+jN}$ for all $n$ and $j$.
+The spectrum of $a$ is:
+\begin{equation}
+A_k = \sum_{n=0}^{N-1} W_N^{kn} a_n
+\label{dft.eq}
+\end{equation}
+where
+$$
+W_N = e^{-i {2 \pi \over N}}
+$$
+and $W_N^k$ for $k=0 \ldots N-1$ are called the {\it Nth roots of unity}.
+The sequence $A_k$ is the discrete Fourier transform of the sequence $a_n$.
+Each is a sequence of $N$ complex numbers.
+
+The FFT is a fast algorithm for computing the DFT.
+If we take the 2-point DFT and 4-point DFT and generalize them
+to 8-point, 16-point, ..., $2^n$-point (n is an integer), we get the FFT algorithm.
+
+There are several ways to write an FFT. For instance, let $m$ be an integer and let $N=2^m$.
+Suppose that $x=[x_0,\ldots,x_{N-1}]$ is an $N$ dimensional complex vector.
+Let $\omega=\exp({-2\pi i\over N})$.  Then the DFT, $c= F_N(x)$ is given by
+\begin{equation}
+c_k={1\over N}\sum_{j=0}^{j=N-1}x_j\omega^{jk}.
+\end{equation}
+Let $n=N/2$, let $u$ and $v$ be $n$ dimensional vectors defined by 
+\begin{align}
+u_j&=x_j+x_{j+n},\ j=0,\ldots,n-1\\
+v_j&=(x_j-x_{j+n})\omega ^j,\ j=0,\ldots,n-1.
+\end{align}
+Then 
+\begin{align}
+c_{2j}={1\over 2}(F_n(u))_j,\ j=0,\ldots,n-1\\
+c_{2j+1}={1\over 2}(F_n(v))_j,\ j=0,\ldots,n-1.
+\end{align}
+
+To compute the DFT of an $N$-point sequence using equation (\ref{dft.eq})
+would take $(N^2)$ multiplies and adds.
+The FFT algorithm computes the DFT using $(N \log N)$ multiplies and adds.
+
+Practical issues:
+We translate the picture so that pixel (0,0), which now contains frequency $(\omega_x,\omega_y)=(0,0)$, moves to the center of the image. Then, we display pixel values proportional to
+log(magnitude) of each complex number. For color images, do the above to each of the three channels
+(R, G, and B) independently.
+
+Apply to our system, firstly, we calculate FFT of image. Secondly, we will compute mean amplitude spectrum value of entire pixel in image and. Finally, the result of this operation is compared to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
 
 \subsection{Face detection}
 \label{face-detection}
