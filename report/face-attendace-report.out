@@ -8,8 +8,13 @@
 \BOOKMARK [2][-]{subsection.3.2}{Face detection}{section.3}% 8
 \BOOKMARK [2][-]{subsection.3.3}{Frontal-view detection}{section.3}% 9
 \BOOKMARK [2][-]{subsection.3.4}{Face recognition}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.5}{Graphic User Interface}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.6}{Attendance management}{section.3}% 12
-\BOOKMARK [1][-]{section.4}{Experimental result}{}% 13
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 14
-\BOOKMARK [1][-]{section*.6}{References}{}% 15
+\BOOKMARK [3][-]{figure.caption.3}{Multi-task Convolution Network}{subsection.3.4}% 11
+\BOOKMARK [3][-]{subsubsection.3.4.2}{FaceNet model}{subsection.3.4}% 12
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Training}{subsection.3.4}% 13
+\BOOKMARK [2][-]{subsection.3.5}{Graphic User Interface}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.6}{Attendance management}{section.3}% 15
+\BOOKMARK [1][-]{section.4}{Experimental result}{}% 16
+\BOOKMARK [2][-]{subsection.4.1}{Embedings}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.2}{Training}{section.4}% 18
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 19
+\BOOKMARK [1][-]{section*.14}{References}{}% 20

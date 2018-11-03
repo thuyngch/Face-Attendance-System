@@ -77,17 +77,25 @@ Face Attendance Checking, Facial Recognition, Deep Learning
 %------------------------------------------------------------------------------
 \section{Introduction}
 \label{introduction}
-\textbf{This section is of Thien.}
+%\textbf{This section is of Thien.}
+%Introduce about a framework of face recognition system, including face detection, landmark detection, face recognition.
 
-Introduce about a framework of face recognition system, including face detection, landmark detection, face recognition.
-
+Face recognition systems are applying widely in real life, such as: tracking, managing employees, finding information of ceblerities, etc. There are many approaches to design a face recognition system, but these systems frequently are affected by light, non-frontal faces, resolution of cameras, etc, each method have many separable challenges. Overall, a face recognition has two main stages which are face detection and face recognition, yet we want to create a constraint on frontal faces for users, that lead our system to have three stages: face detection, face landmark detection and face recognition.  
 \subsection{Face detection}
+Face detection and alignment are essential to many face applications such as face recognition and facial expression analysis. However, the large visual variations of faces, such as occlusions, large pose variations and extreme lightings, impose
+great challenges for these tasks in real world applications.
 
+The cascade face detector proposed by Viola and Jones \cite{ref:detect-1} utilizes Haar-Like features and AdaBoost to train cascaded classifiers, which achieve good performance with real-time
+efficiency. However, quite a few works [2, 3, 4] indicate that this detector may degrade significantly in real-world applications with larger visual variations of human faces even with more advanced features. Besides the cascade structure, [5, 6, 7] introduce deformable part models (DPM) for face detection and achieve remarkable performance. However, they need high computational expense and may usually require expensive annotation in the training stage. Recently, convolutional neural networks (CNNs) achieve remarkable progresses in a variety of computer vision tasks, especially face detection task. Li et al. [19] use cascaded CNNs for face detection, but it requires bounding box calibration from face detection with extra computational expense and ignores the inherent correlation between facial landmarks localization and bounding box regression. Face alignment also attracts extensive interests. Regression-based methods [12, 13, 16] and template fitting approaches [14, 15, 7] are two popular categories.
+
+However, most of the available face detection and face alignment methods ignore the correlation between these two tasks. Though there exist several works attempt to jointly solve them, there are still limitations in these works. For example, Chen et al. [18] jointly show alignment and detection with random forest using features of pixel value difference. But, the handcraft features used limits its performance. From those previous experiments, we choose an new approach which integrate these two tasks using unified cascaded CNNs by multi-task learning called Multi-task Convolutional Network in section \ref{face-recognition}.
 \subsection{Landmark detection}
+The locations of the fiducial facial landmark points around facial components and facial contour capture  the  rigid  and  non-rigid  facial  deformations  due to  head  movements  and  facial  expressions.  They  are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use dlib library which is a powerfull source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
 
 \subsection{Face recognition}
-
-
+After face detection and alignment, those regions of face is extracted to get feature vectors. With conventional way, One of the most popular feature for face recognition is Gabor feature. Tudor Barbu ?? uses Gabor transfrom to extract feature, and then using K-Nearest Neighbour (K-NN) based on clustering feature to predict identity of a face. This implement achieve quite impressed performance with accuracy of 90\% on Yale Face Database B. In Opencv library which focuses on algorithms of Computer Vision introduces a method called Local Binary Patterns (LBP) based on Haar-Like feature. In term of speed, LBP has relly real-time efficiency, whereas it is not stable in term of accuracy, this method cannot face with arounded noise which is the reason why LBP and Haar-Like feature are rarely applied in practical systems. Because of limitations of conventional features,  deep learning models gradually instead and get better and better. Yi Sun, Xiaogang Wang, Xiaoou Tang ?? build a deep model Deep hidden IDentity features (DeepID) which uses convolutional neural network to extract face feature. Advantage of this model is using a small dataset for training, that is consideraby good for systems which cannot collect a large dataset of users. However, to reach a high accuracy, DeepID model become really complex with many neural network branches for each person. There are 10 patches of face which contain interested information are chosen from each image, then they are scaled with three figures in RGB and gray chanel. Totally, model have 60 different networks to extact feature of an image, then feedforwarding feature into a classifier using Joint Bayesian. DeepID achieves excellent accuracy of 97.45\% on dataset Labeled Faces in the
+Wild (LFW). In 2014, the authors of DeepID show DeepID2 which is a improved version of DeepID. In new version, interested regions of face algorithm is built to eliminate useless patches which cannot extract high-level feature. That work really helpfull affect accuracy, specifically there is a increase in accuracy at 99.63\%. In 2015, Google Inc.?? use deep convolutional network Inception and triplet loss function in FaceNet mdoel to extract feature. Their outstanding work in this model is using hard triplet loss to separate feature for each person, so FaceNet feature is robust in both face verification and face recognition. The accuracy of 99.63\% on LFW and 95.12\% on Youtube Faces
+DB dataset is high enough to represent the perfection of model.
 %------------------------------------------------------------------------------
 %	Proposed system
 %------------------------------------------------------------------------------
@@ -195,7 +203,78 @@ These steps are implemented based on 5-point facial landmark technique with Dlib
 
 \subsection{Face recognition}
 \label{face-recognition}
-\textbf{This section is of Thien.}
+%\textbf{This section is of Thien.}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{img/pipeline.png}
+	\caption{Model structure. Our network consists of a batch input layer and a deep CNN 
+followed by L2 normalization, which results in the face embedding. This is followed by the triplet loss during training.}\label{fig:pipeline}
+\end{figure}
+
+In this stage, faces in raw images are detected and aligned by Multi-task CNN, we use convenient pre-trained FaceNet model to extract feature (in Figure \ref{fig:pipeline}) and then feedforward it to a SVM classifier for regconition. 
+\subsubsection{Multi-task Convolution Network}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{img/mtcnn.png}
+	\caption{Pipeline of our cascaded framework that includes three-stage multi-task deep convolutional networks. Firstly, candidate windows are produced
+through a fast Proposal Network (P-Net). After that, we refine these candidates
+in the next stage through a Refinement Network (R-Net). In the third stage,
+The Output Network (O-Net) produces final bounding box and facial landmarks position.}\label{fig:mtcnn}
+\end{figure}
+
+The overall pipeline Multi-task CNN is shown in Figure \ref{fig:mtcnn}. An image is  initially resized to different scales to build an image pyramid, which is the input of the following three-stage cascaded framework with CNN architectures in Figure \ref{fig:mtcnn-arch}:
+
+\textbf{Stage 1}: A fully convolutional network is exploited, called Proposal Network (P-Net), to obtain the candidate windows and their bounding box regression vectors. Then using the estimated bounding box regression vectors to calibrate the candidates. After that, employing non-maximum suppression (NMS) to merge highly overlapped candidates.
+
+For each candidate window, P-CNN predict the offset between it and the nearest ground truth (i.e.,the bounding boxes’ left top, height, and width). The learning objective is formulated as a regression problem, and  the Euclidean loss is employed for each sample $x_i$:
+\begin{align}
+	L_i^{box} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
+\end{align}
+		
+\textbf{Stage 2}: All candidates are fed to another CNN, called Refine Network (R-Net), which further rejects a large number of false candidates, performs calibration with bounding box regression, and NMS candidate merge.
+
+\textbf{Stage 3}: his stage is similar to the second stage, but in this stage we aim to describe the face in more details. In particular, the network will output five facial landmarks’ positions.
+
+Similar to the bounding box regression task, facial landmark detection is formulated as a regression problem: 
+
+\begin{align}
+	L_i^{landmark} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
+\end{align}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{img/mtcnn_arch.png}
+	\caption{The architectures of P-Net, R-Net, and O-Net, where “MP” means max pooling and “Conv” means convolution. The step size in convolution and pooling
+is 1 and 2, respectively}\label{fig:mtcnn-arch}
+\end{figure}
+
+\subsubsection{FaceNet model} 
+This model use Inception-ResNet v1 architecture ?? and triplet loss to extract feature. Inception-ResNet v1 (in Figure \ref{fig:inception-resnet}) is a very deep convolutional network which combine ResNet network and Inception network with a complex structure. This deep network affords to extract high-level feature for object recognition, and combination with triplet loss gets better and better. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{img/triplet.png}
+	\caption{The Triplet Loss minimizes the distance between an anchor and a positive, both of which have the same identity, and maximizes the distance between the anchor and a negative of a different identity.}
+	\label{fig:triplet}
+\end{figure}
+
+The embedding is represented by $f(x) \in R^d$. It embeds an image $x$ into a $d$-dimensional Euclidean space. Here we want to ensure that an image $x_i^a$ (anchor) of a specific person is closer to all other images $x_i^p$ (positive) of the same person than it is to any image $x_i^n$ (negative) of any other person. This is visualized in Figure \ref{fig:triplet}. Thus we want, 
+\begin{align}
+	\Vert f(x_i^a) - f(x_i^p) \Vert_2^2 + \alpha < \Vert f(x_i^a) - f(x_i^n) \Vert_2^2
+\end{align}
+where $\alpha$ is a margin that is enforced between positive and negative pairs. The loss that is being minimized is then: 
+\begin{align}
+	L = \sum_i^N(\Vert f(x_i^a) - f(x_i^p) \Vert_2^2  - \Vert f(x_i^a) - f(x_i^n) \Vert_2^2 + \alpha)
+\end{align}
+In this implement, FaceNet model is trained on VGGFace2 dataset which over 9000 identities and over 3.3 million faces. VGGFace2 is a large-scale face recognition dataset from Google Image Search and have large variations in pose, age, illumination, ethnicity and profession. Therefore, embeddings is specifical for each person. 
+\subsubsection{Training} 
+To apply Multi-task model and FaceNet model into Face Attandence system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract feature of each patch with 512 dimension vector by pre-trained FaceNet model. After that, we split dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, testing subset contrains 30 images, 10 images and 30 images respectively. We decide to collect only 30 images for training subset, because we want to reduce time of training and time for collecting images. Next, we use SVM classifier to train on trainning subset and validate on validating subset. The output of trained-classifier is probability vector whose each element represent ability of an identity anchor belong to. Thus, anchor is determined by choose which identity have maximum probability, that suffer from mistakes when faces of strangers appear. To solve open-set problem, we combine both two subsets: training and validating to training threshold. This threshold helps us to eliminate unknow people, additionally ensure that the result of system achieve higher accuracy.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{img/in_res_v1.png}
+	\caption{Schema for Inception-ResNet-v1 and Inception-ResNet-v2 networks. This schema applies to both networks but the underlying components differ.}
+	\label{fig:inception-resnet}
+\end{figure}
 
 \subsection{Graphic User Interface}
 \label{gui}
@@ -249,8 +328,60 @@ After attendance checking process is completed, the Total column will display th
 %------------------------------------------------------------------------------
 \medskip
 \section{Experimental result}
+In this section, we first evaluate the effectiveness of the feature extracted from FaceNet. Then we will compare our system in different context such as: background, illumination, resolution of camera.Finally, we evaluate the computational efficiency of our system.
 \label{experimental-result}
-\textbf{This section is of Thien.}
+%\textbf{This section is of Thien.}
+\subsection{Embedings} 
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{0.5\linewidth}
+    \includegraphics[width=\linewidth]{img/pca1.png}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.5\linewidth}
+    \includegraphics[width=\linewidth]{img/pca2.png}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.5\linewidth}
+    \includegraphics[width=\linewidth]{img/pca3.png}
+    \caption{}
+  \end{subfigure}
+  \caption{Embeddings with PCA visualization} 
+  \label{fig:pca}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{img/t-sne.png}
+	\caption{Embeddings with t-SNE visualization}\label{fig:t-sne}
+\end{figure}
+Because we use pre-trained model FaceNet, we need to test specification of embeddings which is output of model. We use PCA ?? and t-SNE ?? to visualize embeddings in 3 dimension space in Figure \ref{fig:pca} and Figure \ref{fig:t-sne}. In PCA visualization, embeddings of the same person close together, although they are not completely separable. In another of t-SNE, because t-SNE method include clustering stage, so embeddings totally belong to their classes. If embeddings of FaceNet model is not contain high-level of specification, reducing dimension algorithms cannot show or cluster embeddings properly.  
+\subsection{Training}
+Training data is carefully collected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in pratical system ,because it is difficult for users to keep their faces in a correct position. In training data include 52 identities and 1560 images totally.
+
+The accuracy of SVM classifier is 99.36\%, after training classifier, we train to get the best threshold. We divide threshold in range $[0;1]$.As a result, threshold for 52 identities is 0.18825. Testing accuracy with threshold achieve 98.85\% on testing subset. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{0.35\linewidth}
+    \includegraphics[width=\linewidth]{img/1.png}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.35\linewidth}
+    \includegraphics[width=\linewidth]{img/2.png}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.35\linewidth}
+    \includegraphics[width=\linewidth]{img/3.png}
+    \caption{}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.35\linewidth}
+    \includegraphics[width=\linewidth]{img/4.png}
+    \caption{}
+  \end{subfigure}
+  \caption{Unrecognized identity, (a),(b) are training images, and (c),(d) are testing images in pratical condition.} 
+  \label{fig:compare}
+\end{figure}
 
 
 %------------------------------------------------------------------------------
