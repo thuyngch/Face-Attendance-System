@@ -77,28 +77,28 @@ Face Attendance Checking, Facial Recognition, Deep Learning
 \section{Introduction}
 \label{introduction}
 
-Face recognition systems are being applied widely in real life such as tracking, managing employees, finding information of celebrities, and so forth. There are many approaches to design a face recognition system, but such these systems are frequently affected by light, non-frontal faces, resolution of cameras, etc. Thus, each method has specific challenges. Overall, a face recognition has two main stages which are face detection and face recognition, yet we want to create constraints on blur-clean and frontal-view faces of users that leads our system to have four stages: blur detection, face detection, landmark detection and face recognition.  
+Face recognition systems are being applied widely in real life such as tracking, managing employees, finding information about celebrities, and so forth. There are many approaches to design a face recognition system, but such these systems are frequently affected by light, non-frontal faces, resolution of cameras, etc. Thus, each method has specific challenges. Overall, a face recognition has two main stages which are face detection and face recognition, yet we want to create constraints on blur-clean and frontal-view faces of users that leads our system to have four stages: blur detection, face detection, landmark detection and face recognition.  
 
 
 %------------------------------------------------------------------------------
 \subsection{Face detection}
 Face detection and alignment are essential to many face applications such as face recognition and facial expression analysis. However, the large visual variations of faces, such as occlusions, large pose variations and extreme lightings, impose
-great challenges for these tasks in real world applications.
+great challenges for these tasks in real-world applications.
 
 The cascade face detector proposed by Viola and Jones \cite{ref:detect-1} utilizes Haar-Like features and AdaBoost to train cascaded classifiers, which achieve good performance with real-time
 efficiency. However, quite a few works \cite{ref:detect-2}\cite{ref:detect-3}\cite{ref:detect-4} indicate that this detector may degrade significantly in real-world applications with larger visual variations of human faces even with more advanced features. Besides the cascade structure, \cite{ref:detect-5}\cite{ref:detect-6}\cite{ref:detect-7} introduce deformable part models (DPM) for face detection and achieve remarkable performance. However, they need high computational expense and may usually require expensive annotation in the training stage. Recently, convolutional neural networks (CNNs) achieve remarkable progresses in a variety of computer vision tasks, especially face detection task. Li et al. \cite{ref:detect-8} use cascaded CNNs for face detection, but it requires bounding box calibration from face detection with extra computational expense and ignores the inherent correlation between facial landmarks localization and bounding box regression. Face alignment also attracts extensive interests. Regression-based methods \cite{ref:detect-9}\cite{ref:detect-10}\cite{ref:detect-11} and template fitting approaches \cite{ref:detect-12}\cite{ref:detect-13}\cite{ref:detect-7} are two popular categories.
 
-However, most of the available face detection and face alignment methods ignore the correlation between these two tasks. Though there exist several works attempt to jointly solve them, there are still limitations in these works. For example, Chen et al. \cite{ref:detect-14} jointly show alignment and detection with random forest using features of pixel value difference. But, the handcraft features used limits its performance. From those previous experiments, we choose an new approach which integrate these two tasks using unified cascaded CNNs by multi-task learning called Multi-task Convolutional Network in section \ref{face-recognition}.
+However, most of the available face detection and face alignment methods ignore the correlation between these two tasks. Though there exist several works attempt to jointly solve them, there are still limitations in these works. For example, Chen et al. \cite{ref:detect-14} jointly show alignment and detection with random forest using features of pixel value difference. But, the handcraft features used limits its performance. From those previous experiments, we choose a new approach which integrates these two tasks using unified cascaded CNNs by multi-task learning called Multi-task Convolutional Network in section \ref{face-recognition}.
 
 
 %------------------------------------------------------------------------------
 \subsection{Landmark detection}
-The locations of the fiducial facial landmark points around facial components and facial contour capture  the  rigid  and  non-rigid  facial  deformations  due to  head  movements  and  facial  expressions.  They  are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use dlib library which is a powerfull source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
+The locations of the fiducial facial landmark points around facial components and facial contour capture the rigid and non-rigid facial deformations due to head movements and facial expressions.  They are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use a dlib library which is a powerful source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
 
 
 %------------------------------------------------------------------------------
 \subsection{Face recognition}
-After face detection and alignment, those regions of face are extracted to get feature vectors. Conventionally, one of the most popular features for face recognition is Gabor feature. Tudor Barbu \cite{ref:recog-1} used Gabor transfrom to extract features, and then applied K-Nearest Neighbour (K-NN) based on clustering features to predict identity of a face. This implementation achieved a quite impressed performance with an accuracy of 90\% on the Yale Face Database B \cite{ref:data-yaleB}. OpenCV \cite{ref:recog-2}, which is an open-source library focussing on Computer Vision algorithms, introduced a method called Local Binary Patterns (LBP) based on Haar-Like feature. In term of speed, LBP has a relly real-time efficiency, whereas it is not stable in term of accuracy. In particular, this method cannot face arounded noise which is a reason why LBP and Haar-Like feature are rarely applied in practical systems. Because of limitations of conventional features, approaches exploiting deep learning have gradually developed instead. Yi Sun, Xiaogang Wang, and Xiaoou Tang \cite{ref:recog-3} built a deep model named Deep hidden IDentity (DeepID) which used Convolutional Neural Network (CNN) to extract face features. The advantage of this method was using a small dataset for training that was considerably relevant for applications which cannot collect a large dataset of users. Nevertheless, to reach a high accuracy, DeepID model became really complex with many neural network branches for each person. There were 10 patches of face, which contain interesting information, chosen from each image, then they were scaled with three figures in RGB and gray channel. Totally, model had 60 different networks to extract features for an image, then fed forward extracted features into a classifier using Joint Bayesian. DeepID achieved an excellent accuracy of 97.45\% on Labeled Faces in the Wild (LFW) \cite{ref:data-lfw}. In 2014, the authors of DeepID introduced DeepID2 \cite{ref:recog-4} which was an improved version of its predescendor. In the new version, interesting regions were built to eliminate useless patches which cannot provide high-level features. That work really helpfully affected the accuracy, specifically there was an increase in accuracy at 99.63\%. In 2015, Google Inc. \cite{ref:recog-5} exploited a deep CNN Inception \cite{ref:in-res} and a triplet loss function to form the FaceNet model, which was to extract features. Their outstanding point was using a hard triplet loss to separate features for each person, so FaceNet feature is robust in both face verification and face recognition. The accuracy of 99.63\% on LFW and 95.12\% on Youtube Faces DB \cite{ref:data-youtube} were high enough to represent the perfection of the model.
+After face detection and alignment, those regions of face are extracted to get feature vectors. Conventionally, one of the most popular features for face recognition is Gabor feature. Tudor Barbu \cite{ref:recog-1} used Gabor transfrom to extract features, and then applied K-Nearest Neighbour (K-NN) based on clustering features to predict the identity of a face. This implementation achieved a quite impressed performance with an accuracy of 90\% on the Yale Face Database B \cite{ref:data-yaleB}. OpenCV \cite{ref:recog-2}, which is an open-source library focussing on Computer Vision algorithms, introduced a method called Local Binary Patterns (LBP) based on the Haar-Like feature. In term of speed, LBP has a really real-time efficiency, whereas it is not stable in term of accuracy. In particular, this method cannot face around noise which is a reason why LBP and Haar-Like feature are rarely applied in practical systems. Because of limitations of conventional features, approaches exploiting deep learning have gradually developed instead. Yi Sun, Xiaogang Wang, and Xiaoou Tang \cite{ref:recog-3} built a deep model named Deep hidden IDentity (DeepID) which used Convolutional Neural Network (CNN) to extract face features. The advantage of this method was using a small dataset for training that was considerably relevant for applications which cannot collect a large dataset of users. Nevertheless, to reach a high accuracy, DeepID model became really complex with many neural network branches for each person. There were 10 patches of a face, which contain interesting information, chosen from each image, then they were scaled with three figures in RGB and gray channel. Totally, the model had 60 different networks to extract features for an image, then fed forward extracted features into a classifier using Joint Bayesian. DeepID achieved an excellent accuracy of 97.45\% on Labeled Faces in the Wild (LFW) \cite{ref:data-lfw}. In 2014, the authors of DeepID introduced DeepID2 \cite{ref:recog-4} which was an improved version of its predecessor. In the new version, interesting regions were built to eliminate useless patches which cannot provide high-level features. That work really helpfully affected the accuracy, specifically there was an increase in accuracy at 99.63\%. In 2015, Google Inc. \cite{ref:recog-5} exploited a deep CNN Inception \cite{ref:in-res} and a triplet loss function to form the FaceNet model, which was to extract features. Their outstanding point was using a hard triplet loss to separate features for each person, so FaceNet feature is robust in both face verification and face recognition. The accuracy of 99.63\% on LFW and 95.12\% on Youtube Faces DB \cite{ref:data-youtube} were high enough to represent the perfection of the model.
 
 
 %------------------------------------------------------------------------------
@@ -108,17 +108,18 @@ After face detection and alignment, those regions of face are extracted to get f
 \section{Proposed system}
 \label{proposed-system}
 
-In this paper, we apply deep facial recognition techniques into the problem of face attendance checking. A system is built in order to manage appearances of students in a class, which is revealed in Fig. \ref{fig:system}. As normally, a facial recognition system is organized as a pipeline of typical stages such as face detection, landmark detection, and face recognition. However, to ensure input frames for underlying algorithms are high quality, we append an early filter (the Blur detection stage) that are able to discard blur frames, which are caught by motions of people in front of a standard webcam. Then, clean frames are passed through the Face detection block to count the number of faces existing inside these frames. In our specific case, there is only one face per frame allowed to be processed, so frames that contain more than one faces are rejected by the block. Afterward, the Landmark detection is to localize statistic-salient points in the face in order to verify whether the face is in frontal view of the camera. This frontal-view check will help improve the accuracy of the face recognition algorithm. Finally, the Face recognition uses blur-clean, one-face, and frontal-view frames from previous stages to extract relevant features and then perform a classification task to indicate which category the input most likely belong to.
+In this paper, we apply deep facial recognition techniques to the problem of face attendance checking. A system is built in order to manage appearances of students in a class, which is revealed in Fig. \ref{fig:system}. As normally, a facial recognition system is organized as a pipeline of typical stages such as face detection, landmark detection, and face recognition. However, to ensure input frames for underlying algorithms are high quality, we append an early filter (the Blur detection stage) that are able to discard blur frames, which are caught by motions of people in front of a standard webcam. Then, clean frames are passed through the Face detection block to count the number of faces existing inside these frames. In our specific case, there is only one face per frame allowed to be processed, so frames that contain more than one faces are rejected by the block. Afterward, the Landmark detection is to localize statistic-salient points in the face in order to verify whether the face is in the frontal view of the camera. This frontal-view check will help improve the accuracy of the face recognition algorithm. Finally, the Face recognition uses blur-clean, one-face, and frontal-view frames from previous stages to extract relevant features and then perform a classification task to indicate which category the input most likely belong to.
 
-In addition, to leverage the ease in use, we design a friendly graphic user interface (GUI) so that people who want to use the system to manage (teachers) or check (students) attendance can interact with the application without any specific knowledge. To make the system more robust, we carefully analyze the distribution outlier of features representing for registered accounts. Therefore, the algorithm has ability to detect people who have not registered in the application before, which is equivalent to the open-set problem in face recognition.
+In addition, to leverage the ease in use, we design a friendly graphic user interface (GUI) so that people who want to use the system to manage (teachers) or check (students) attendance can interact with the application without any specific knowledge. To make the system more robust, we carefully analyze the distribution outlier of features representing for registered accounts. Therefore, the algorithm has the ability to detect people who have not registered in the application before, which is equivalent to the open-set problem in face recognition.
 
-Our work is organized as follows. In the section \ref{implementation}, stages of the proposed system are described clearly, including motion-blur detection, face detection, frontal-view detection, and face recognition. Then, section \ref{experimental-result} is for reporting some experimental results.
+Our work is organized as follows. In section \ref{implementation}, stages of the proposed system are described clearly, including motion-blur detection, face detection, frontal-view detection, and face recognition. Then, section \ref{experimental-result} is for reporting some experimental results.
+
 
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{img/system-pipeline.png}
-	\caption{The system pipeline. There are four stages, namely blur detection, face detection, landmark detection, and face recognition. These four blocks are in the descending order of size in the direction from input to output. This points out that our system are tougher to input frames from the camera when such frames passed through the system. Therefore, best frames are likely to be processed, which may improves the final recognition accuracy.}\label{fig:system}
+	\caption{The system pipeline. There are four stages, namely blur detection, face detection, landmark detection, and face recognition. These four blocks are in the descending order of size in the direction from input to output. This points out that our system is tougher to input frames from the camera when such frames passed through the system. Therefore, best frames are likely to be processed, which may improve the final recognition accuracy.}\label{fig:system}
 \end{figure}
 
 
@@ -134,7 +135,7 @@ Our work is organized as follows. In the section \ref{implementation}, stages of
 \subsection{Motion-blur detection}
 \label{motion-blur-detection}
 
-The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. So as to detect whether an image is blurred, we use the 2D-FFT (2D-Fast Fourier Transform) method.
+The first stage of this system is detecting blurred images and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbor pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. So as to detect whether an image is blurred, we use the 2D-FFT (2D-Fast Fourier Transform) method.
 
  We will review about Fourier Transform of Images. To compute the Fourier transform of an image, you need to:
 \begin{itemize}
@@ -142,7 +143,7 @@ The first stage of this system is detecting blurred image and rejecting them out
 \item Compute DFT of each column, in place.
 \end{itemize}  
 
-When a signal is discrete and periodic, we use the discrete Fourier transform, or DFT.
+When a signal is discrete and periodic, we use the discrete Fourier transform or DFT.
 Suppose our signal is $a_n$ for $n=0 \ldots N-1$,
 and $a_n=a_{n+jN}$ for all $n$ and $j$.
 The spectrum of $a$ is:
@@ -188,15 +189,15 @@ We translate the picture so that pixel (0,0), which now contains frequency $(\om
 log(magnitude) of each complex number. For color images, do the above to each of the three channels
 (R, G, and B) independently.
 
-Apply to our system, firstly, we calculate FFT of image. Secondly, we will compute mean amplitude spectrum value of entire pixel in image and. Finally, the result of this operation is compared to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
+Apply to our system, firstly, we calculate the FFT of the image. Secondly, we will compute the mean amplitude spectrum value of the entire pixels in image and. Finally, the result of this operation is compared to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of the system.
 
 
 %------------------------------------------------------------------------------
 \subsection{Face detection}
 \label{face-detection}
 
-In this paper, we have used Histogram of Oriented Gradients method for extracting features of the face and Linear Support Vector Machine (SVM) method for face detections.\\
-The implementation of this method using sliding window technique with the different sizes of the windows. Using the sliding window technique we could complete the calculation of HOG features, applied to detect and differentiate the face and the false face recognition using the SVM technique.\\
+In this paper, we have used the Histogram of Oriented Gradients method for extracting features of the face and Linear Support Vector Machine (SVM) method for face detections.\\
+The implementation of this method using the sliding window technique with the different sizes of the windows. Using the sliding window technique we could complete the calculation of HOG features, applied to detect and differentiate the face and the false face recognition using the SVM technique.\\
 All of the pre-processing steps are automatically implemented before using Dlib library with the input of being given facial images and the output of localization the identified faces.\\
 
 
@@ -206,11 +207,11 @@ All of the pre-processing steps are automatically implemented before using Dlib 
 
 To check whether the shape of the faces has to be frontal, we implement these 3 following steps:
 \begin{enumerate}[Step 1.]
-	\item Focusing on the center of the image. Only accept these faces that locate in the most central of the images. $((120-360), (90,360))$
-	\item Identify the skew of the image: calculate the coordinate of these eyes and the angle deviation between two eyes in the horizontal direction. If the angle deviation is larger than 10 degree, the image will be ignored.
-	\item Identify the rotation of the image: choose the point which is the midpoint of the right and the left eye. If the nose which is deviated from the selected point is greater than 10 pixels in the horizontal direction, the image is ignored.
+    \item Focusing on the center of the image. Only accept these faces that locate in the most central of the images. $((120-360), (90,360))$
+    \item Identify the skew of the image: calculate the coordinate of these eyes and the angle deviation between two eyes in the horizontal direction. If the angle deviation is larger than 10 degree, the image will be ignored.
+    \item Identify the rotation of the image: choose the point which is the midpoint of the right and the left eye. If the nose which is deviated from the selected point is greater than 10 pixels in the horizontal direction, the image is ignored.
 \end{enumerate}
-These steps are implemented based on 5-point facial landmark technique with Dlib library instead of 68-point facial landmark in order to improve performance. If the image satisfies the condition, it will be accepted.
+These steps are implemented based on 5-point facial landmark technique with Dlib library instead of a 68-point facial landmark in order to improve performance. If the image satisfies the condition, it will be accepted.
 
 
 %------------------------------------------------------------------------------
@@ -223,7 +224,7 @@ These steps are implemented based on 5-point facial landmark technique with Dlib
 followed by L2 normalization, which results in the face embedding. This is followed by the triplet loss during training.}\label{fig:pipeline}
 \end{figure}
 
-In this stage, faces in raw images are detected and aligned by Multi-task CNN, we use convenient pre-trained FaceNet model to extract feature (in Figure \ref{fig:pipeline}) and then feedforward it to a SVM classifier for regconition. 
+In this stage, faces in raw images are detected and aligned by Multi-task CNN, we use a convenient pre-trained FaceNet model to extract feature (in Figure \ref{fig:pipeline}) and then feedforward it to an SVM classifier for recognition. 
 
 
 %------------------------------------------------------------------------------
@@ -241,14 +242,14 @@ The overall pipeline Multi-task CNN is shown in Figure \ref{fig:mtcnn}. An image
 
 \textbf{Stage 1}: A fully convolutional network is exploited, called Proposal Network (P-Net), to obtain the candidate windows and their bounding box regression vectors. Then using the estimated bounding box regression vectors to calibrate the candidates. After that, employing non-maximum suppression (NMS) to merge highly overlapped candidates.
 
-For each candidate window, P-CNN predict the offset between it and the nearest ground truth (i.e.,the bounding boxes’ left top, height, and width). The learning objective is formulated as a regression problem, and  the Euclidean loss is employed for each sample $x_i$:
+For each candidate window, P-CNN predicts the offset between it and the nearest ground truth (i.e., the bounding boxes’ left top, height, and width). The learning objective is formulated as a regression problem, and  the Euclidean loss is employed for each sample $x_i$:
 \begin{align}
-	L_i^{box} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
+    L_i^{box} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
 \end{align}
-		
+        
 \textbf{Stage 2}: All candidates are fed to another CNN, called Refine Network (R-Net), which further rejects a large number of false candidates, performs calibration with bounding box regression, and NMS candidate merge.
 
-\textbf{Stage 3}: his stage is similar to the second stage, but in this stage we aim to describe the face in more details. In particular, the network will output five facial landmarks’ positions.
+\textbf{Stage 3}: his stage is similar to the second stage, but in this stage, we aim to describe the face in more details. In particular, the network will output five facial landmarks’ positions.
 
 Similar to the bounding box regression task, facial landmark detection is formulated as a regression problem: 
 
@@ -283,12 +284,12 @@ where $\alpha$ is a margin that is enforced between positive and negative pairs.
 \begin{align}
 	L = \sum_i^N(\Vert f(x_i^a) - f(x_i^p) \Vert_2^2  - \Vert f(x_i^a) - f(x_i^n) \Vert_2^2 + \alpha)
 \end{align}
-In this implement, FaceNet model is trained on VGGFace2 dataset which over 9000 identities and over 3.3 million faces. VGGFace2 is a large-scale face recognition dataset from Google Image Search and have large variations in pose, age, illumination, ethnicity and profession. Therefore, embeddings is specifical for each person.
+In this implement, FaceNet model has trained on the VGGFace2 dataset which over 9000 identities and over 3.3 million faces. VGGFace2 is a large-scale face recognition dataset from Google Image Search and have large variations in pose, age, illumination, ethnicity and profession. Therefore, embeddings are specifical for each person.
 
 
 %------------------------------------------------------------------------------
 \subsubsection{Training} 
-To apply Multi-task model and FaceNet model into Face Attandence system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract feature of each patch with 512 dimension vector by pre-trained FaceNet model \cite{ref:facenet}. After that, we split dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, testing subset contrains 30 images, 10 images and 30 images respectively. We decide to collect only 30 images for training subset, because we want to reduce time of training and time for collecting images. Next, we use SVM classifier to train on trainning subset and validate on validating subset. The output of trained-classifier is probability vector whose each element represent ability of an identity anchor belong to. Thus, anchor is determined by choose which identity have maximum probability, that suffer from mistakes when faces of strangers appear. To solve open-set problem, we combine both two subsets: training and validating to training threshold. This threshold helps us to eliminate unknow people, additionally ensure that the result of system achieve higher accuracy.
+To apply the Multi-task model and FaceNet model into Face Attendance system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract the features of each patch with 512 dimension vector by pre-trained FaceNet model \cite{ref:facenet}. After that, we split the dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, testing subset contains 30 images, 10 images and 30 images respectively. We decide to collect only 30 images for the training subset because we want to reduce the time for training and collecting images. Next, we use SVM classifier to train on training subset and validate on validating subset. The output of trained-classifier is a probability vector whose each element represents the ability of an identity anchor belong to. Thus, the anchor is determined by choose which identity has maximum probability, that suffers from mistakes when faces of strangers appear. To solve the open-set problem, we combine both two subsets: training and validating to the training threshold. This threshold helps us to eliminate unknown people, additionally ensure that the system achieves higher accuracy.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\linewidth]{img/in_res_v1.png}
@@ -318,13 +319,13 @@ GUIDE primarily is a set of layout tools. However, you must create a PY-file tha
 
 \textit{Laying out the GUI components}
 
-While it is possible to write an PY-file that contains all the commands to lay out a GUI, it is easier to use GUIDE to lay out the components interactively and to generate one file that save the GUI:
+While it is possible to write an PY-file that contains all the commands to lay out a GUI, it is easier to use GUIDE to lay out the components interactively and to generate one file that saves the GUI:
 
 UI-file -contains a complete description of the GUI figure and all of its children (uicontrols and axes), as well as the values of all object properties.
 
 \textit{Programming the GUI components} 
 
-Once you have the UI-file, you will use PyQt5 to extract the UI-file to PY-file to execute the program.PY-file -contains the functions that launch and control the GUI and the callbacks, which are defined as sub functions. This PY-file is referred to as the application PY-file in this documentation. Note that the application PY-file does not contain the code that lays out the uicontrols; this information is saved in the UI-file. The following diagram illustrates the parts of a GUI implementation.
+Once you have the UI-file, you will use PyQt5 to extract the UI-file to PY-file to execute the program. PY-files -contain the functions that launch and control the GUI and the callbacks, which are defined as sub-functions. This PY-file is referred to as the application PY-file in this documentation. Note that the application PY-file does not contain the code that lays out the uicontrols; this information is saved in the UI-file. The following diagram illustrates the parts of a GUI implementation.
 
 \begin{figure}[!h]
 	\centering
@@ -332,7 +333,7 @@ Once you have the UI-file, you will use PyQt5 to extract the UI-file to PY-file 
 	\caption{Parts of GUI Implementation}\label{fig:gui}
 \end{figure}
 
-The GUI are available from the QtDesigner shown in the figure below. The design is described briefly below. Subsequent sections show you how to use them.
+The GUI is available from the QtDesigner shown in the figure below. The design is described briefly below. Subsequent sections show you how to use them.
 
 \begin{figure}[!h]
 	\centering
