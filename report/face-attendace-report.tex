@@ -410,7 +410,7 @@ In this section, we first evaluate the effectiveness of the features extracted f
 %------------------------------------------------------------------------------
 \subsection{Embeddings} 
 
-\begin{figure}
+\begin{figure}[!h]
   \centering
   
   \begin{subfigure}[b]{\linewidth}
@@ -419,7 +419,7 @@ In this section, we first evaluate the effectiveness of the features extracted f
     \label{fig:pca}
   \end{subfigure}
   
-  \hspace{2mm}
+  \hspace{3mm}
   
   \begin{subfigure}[b]{\linewidth}
 	\includegraphics[width=\linewidth]{img/t-sne.png}
@@ -432,7 +432,14 @@ In this section, we first evaluate the effectiveness of the features extracted f
 \end{figure}
 
 
-Because we utilize the pre-trained model FaceNet, we need to test specification of embeddings which is output of model. We use Principal Component Analysis (PCA) and t-SNE \cite{ref:t-sne} to visualize embeddings in 3 dimension space in Figure \ref{fig:pca} and Figure \ref{fig:t-sne}. In PCA visualization, embeddings of the same person close together, although they are not completely separable. In another of t-SNE, because t-SNE method include clustering stage, so embeddings totally belong to their classes. If embeddings of FaceNet model is not contain high-level of specification, reducing dimension algorithms cannot show or cluster embeddings properly.  
+As mentioned above, features representing for faces play a crucial role in a robust face recognition algorithm. A good kind of feature is a way of representing input data so that data points belonging to a same category are close together, whereas, those ones which are different from their categories need to be as far as possible. Therefore, before training the model, we start evaluating how separate samples of different classes stand in a vector space.
+
+In this work, we utilize the pre-trained model FaceNet because of its spectacular demonstration over the recent period. Embedding or the feature vector of FaceNet has size of 128. Therefore, in a 128-dimensional space, embeddings of samples should form clusters, in which, a cluster is a set of samples in a same class. Nevertheless, the 128-dimensional space is beyond human's vision and awareness. Therefore, to have a prior look on these embeddings, we use visualization methods so that embeddings are converted into a new vector space, which human can understand.
+
+Here we exploit the Principal Component Analysis (PCA) and t-SNE \cite{ref:t-sne} to complete this task. The two methods project embeddings from the original size into the 3D space. The result of projection is depicted in Fig. \ref{fig:visualization}. In particular, PCA visualization select eigenvectors corresponding to the highest eigenvalues as basics for the new 3D space. Thus, its result in Fig. \ref{fig:pca}, although, illustrates that data points are slightly separated between distinct classes, this separation is still not clear. The reason is non-selected (residual) eigenvectors still convey a significant amount of information, so by removing them, there is more spatial information is lost. Meanwhile, in Fig. \ref{fig:t-sne}, the separation illustration is picturesque. 
+
+
+In PCA visualization, embeddings of the same person close together, although they are not completely separable. In another of t-SNE, because t-SNE method include clustering stage, so embeddings totally belong to their classes. If embeddings of FaceNet model is not contain high-level of specification, reducing dimension algorithms cannot show or cluster embeddings properly.  
 
 
 %------------------------------------------------------------------------------
