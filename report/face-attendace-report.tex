@@ -11,6 +11,8 @@
 \usepackage{amssymb}
 \usepackage[noadjust]{cite}
 \usepackage{filecontents}
+\usepackage{tabularx,booktabs}
+\usepackage{lipsum}
 
 \usepackage{caption}
 \usepackage{subcaption}
@@ -451,7 +453,9 @@ Here we exploit the Principal Component Analysis (PCA) and t-SNE \cite{ref:t-sne
 
 %------------------------------------------------------------------------------
 \subsection{Training}
-Training data is carefully collected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in pratical system ,because it is difficult for users to keep their faces in a correct position. In training data include 52 identities and 1560 images totally. The training accuracy and validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting. 
+Training data is carefully selected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in practical system, because it is difficult for users to keep their faces in a correct position. Therefore, by choosing faces with view variations, the model learns to generalize from training data. The training set includes 52 identities (people), in which, each identity consists of 30 images with various poses. This results in the training set of 1560 images totally. The training accuracy and validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting.
+
+
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/acc.png}
@@ -459,12 +463,33 @@ Training data is carefully collected with different views from $-70^\circ$ to $7
 	\label{fig:acc}
 \end{figure}
 
+
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/loss.png}
 	\caption{Loss value of SVM with linear kernel.}
 	\label{fig:loss}
 \end{figure}
+
+
+\begin{table}
+\centering
+	\caption{Dataset summary}
+	\label{table:dataset}
+		\begin{tabularx}{0.65\linewidth}{lcc}
+		\toprule
+		Dataset      &   Number of  &  Number of images  \\ 
+		~            &  identities  &  per identity  \\
+		\midrule
+		Training     &   52  &  30  \\ 
+		Validating   &   52  &  10  \\ 
+		Testing      &   52  &  30  \\ 
+		Unknown      &   xx  &  xx  \\ 
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+
 We try to implement multi-class SVM by using sklearn library and the accuracy is 99.36\%. After training classifier, we train to get the best threshold. We divide threshold in range $[0;1]$. As a result, threshold for 52 identities is 0.18825. Testing accuracy with threshold achieve 98.85\% on testing subset. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
 
 \begin{figure}[h!]
