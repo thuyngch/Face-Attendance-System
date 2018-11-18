@@ -50,7 +50,7 @@ class AttendanceChecking:
         new_sheet = new_wb.active
         new_sheet.merge_cells("A1:D1")
         new_sheet.merge_cells("A2:D2")
-        new_sheet.cell(1, 1).value = "DANH SÁCH SINH VIÊN"
+        new_sheet.cell(1, 1).value = "STUDENT LIST"
         new_sheet.cell(2, 1).value = "YOUR COURSE/SUBJECT/TITLE"
         new_sheet.cell(1, 1).font = AttendanceChecking.cell_format("header")
         new_sheet.cell(2, 1).font = AttendanceChecking.cell_format("header")
