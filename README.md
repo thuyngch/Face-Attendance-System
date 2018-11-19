@@ -48,9 +48,9 @@ pip install -r requirements.txt
 
 ## Team members
 
-* **Nguyen Chinh Thuy** - *Technical*, *Functional management*
-* **Le Van Hoang Phuong** - *Technical*, *Attendance management*
-* **Nguyen Tan Sy** - *Technical*, *GUI*
-* **Do Tieu Thien** - *Algorithm*, *Face recognition*
-* **Nguyen Van Qui** - *Algorithm*, *Face detection and normalization*
-* **Nguyen Tan Phu** - *Algorithm*, *Blur removal*
+* **Nguyen Chinh Thuy** - *work generally*, *arrage tasks*
+* **Do Tieu Thien** - *responsible for algorithms*, *implement the Face Recognition stage*
+* **Nguyen Tan Sy** - *implement GUI*
+* **Le Van Hoang Phuong** - *implement the Attendace Management and Attention modules in GUI*
+* **Nguyen Van Qui** - *implement the Face and Lanmark Detection stages*
+* **Nguyen Tan Phu** - *implement the Blur Detection stage*
