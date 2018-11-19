@@ -2,6 +2,17 @@
 An Attendance Checking System using Deep Facial Recognition, written in Python.
 
 
+## Table of Content
+  * [Introduction](#introduction)
+  * [Algorithm description](#algorithm-description)
+  * [GUI description](#gui-description)
+  * [Setup guidance](#setup-guidance)
+  * [Training guidance](#training-guidance)
+  * [Experimental results](#experimental-results)
+  * [Demo](#demo)
+  * [Team members](#team-members)
+
+
 ## Introduction
 * This is our final project in the course "***Artificial Intelligence in Control Engineering***" (August-December 2018), guided by **Dr. Cuong Pham-Viet** (Faculty of Electrical and Electronics Engineering, Ho Chi Minh city University of Technology, Vietnam).
 
