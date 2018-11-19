@@ -84,14 +84,14 @@ Face recognition systems are being applied widely in real life such as tracking,
 
 %------------------------------------------------------------------------------
 \subsection{Face detection}
-The face detector proposed by Viola and Jones \cite{ref:detect-1} used Haar-Like features and AdaBoost to train cascaded classifiers, which achieve good performance with real-time efficiency. However, a few works \cite{ref:detect-2},\cite{ref:detect-3},\cite{ref:detect-4} indicate that this detector may degrade considerably in real-world applications with larger visual variations of human faces even with more advanced features. Besides the cascade structure, \cite{ref:detect-5},\cite{ref:detect-6},\cite{ref:detect-7} introduce deformable part models (DPM) for face detection and achieve remarkable performance. However, they need a high computational expense and may usually require expensive annotation in the training stage. Recently, convolutional neural networks (CNN) achieve remarkable progress in a variety of computer vision tasks, especially face detection task. Li et al. \cite{ref:detect-8} use cascaded CNN for face detection, but it requires bounding box calibration from face detection with an extra computational expense and ignores the correlation between facial landmarks localization and bounding box regression. Face alignment also attracts extensive interests. Regression-based methods \cite{ref:detect-9},\cite{ref:detect-10},\cite{ref:detect-11} and template fitting approaches \cite{ref:detect-7}\cite{ref:detect-12}\cite{ref:detect-13} are two popular categories.
+Before face recognition stage, we need to detect faces in a image and bound the high-level regions to eliminate effects, such as hair, background. The face detector proposed by Viola and Jones \cite{ref:detect-1} used Haar-Like features and AdaBoost algorithm to train cascaded classifiers, which achieve good performance with real-time efficiency. However, a few works \cite{ref:detect-2},\cite{ref:detect-3},\cite{ref:detect-4} show that Haar-Like feature may degrade considerably in real-world applications with larger visual variations of human faces even with more advanced features and more training images. Besides the cascade model, \cite{ref:detect-5},\cite{ref:detect-6},\cite{ref:detect-7} introduce deformable part models (DPM) for face detection and achieve remarkable performance. However, they need a high computational expense and may usually require expensive annotation in the training stage. With the rise of data-model, convolutional neural networks (CNN) achieve considerable accuracy in the number of computer vision tasks, especially face detection task. Li et al. \cite{ref:detect-8} use cascaded CNN for face detection, but it requires bounding box calibration from face detection with an extra computational expense and ignores the correlation between facial landmarks localization and bounding box regression. Face alignment also attracts extensive interests. Regression-based methods \cite{ref:detect-9},\cite{ref:detect-10},\cite{ref:detect-11} and template fitting methods \cite{ref:detect-7},\cite{ref:detect-12},\cite{ref:detect-13} are two popular approaches.
 
-However, most of the available face detection and face alignment methods ignore the correlation between these two tasks. Though there exist several works attempt to jointly solve them, there are still limitations in these works. For example, Chen et al. \cite{ref:detect-14} jointly show alignment and detection with random forest using features of pixel value difference. But, the handcraft features used limits its performance. From those previous experiments, we choose a new approach which integrates these two tasks using unified cascaded CNN by multi-task learning called Multi-task Convolutional Network in section \ref{face-recognition}.
+However, most of the available face detection and face alignment methods ignore the correlation between these two tasks. Though there exist several works attempt to jointly solve them, there are still limitations in these works. For example, Chen et al. \cite{ref:detect-14} jointly show alignment and detection with random forest using features of pixel value difference. But, the handcraft features used limits its performance. From those previous experiments, we choose a new approach which integrates these two tasks using unified cascaded CNN by multi-task learning called Multi-task Convolutional Network which is also face detector used in FaceNet model in section \ref{face-recognition}.
 
 
 %------------------------------------------------------------------------------
 \subsection{Landmark detection}
-The locations of the fiducial facial landmark points around facial components and facial contour capture  the  rigid  and  non-rigid  facial  deformations  due to  head  movements  and  facial  expressions.  They  are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use Dlib library which is a powerfull source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
+The locations of the facial landmark points around facial components (nose, eye centers, etc) capture facial deformations due to head movements and facial expressions, so we will control non-frontal faces for better accuracy. They are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use Dlib library which is a powerfull opened source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
 
 
 %------------------------------------------------------------------------------
@@ -237,14 +237,14 @@ The Output Network (O-Net) produces final bounding box and facial landmarks posi
 
 The overall pipeline Multi-task CNN is shown in Figure \ref{fig:mtcnn}. An image is  initially resized to different scales to build an image pyramid, which is the input of the following three-stage cascaded framework with CNN architectures in Figure \ref{fig:mtcnn-arch}:
 
-\textbf{Stage 1}: A fully convolutional network is exploited, called Proposal Network (P-Net), to obtain the candidate windows and their bounding box regression vectors. Then using the estimated bounding box regression vectors to calibrate the candidates. After that, employing non-maximum suppression (NMS) to merge highly overlapped candidates.
+\textbf{Stage 1}: A fully convolutional network is exploited, called Proposal Network (P-Net), to obtain the proposed windows and their bounding box regression vectors. Then using the estimated bounding box regression vectors to calibrate the candidates. After that, employing non-maximum suppression (NMS) to merge highly overlapped candidates.
 
 For each candidate window, P-CNN predict the offset between it and the nearest ground truth (i.e.,the bounding boxes’ left top, height, and width). The learning objective is formulated as a regression problem, and  the Euclidean loss is employed for each sample $x_i$:
 \begin{align}
 	L_i^{box} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
 \end{align}
 		
-\textbf{Stage 2}: All candidates are fed to another CNN, called Refine Network (R-Net), which further rejects a large number of false candidates, performs calibration with bounding box regression, and NMS candidate merge.
+\textbf{Stage 2}: All candidates are fed to following CNN, called Refine Network (R-Net), which further rejects a large number of false candidates, performs calibration with bounding box regression, and NMS candidate merge.
 
 \textbf{Stage 3}: his stage is similar to the second stage, but in this stage we aim to describe the face in more details. In particular, the network will output five facial landmarks’ positions.
 
@@ -286,7 +286,7 @@ In this implement, FaceNet model is trained on VGGFace2 dataset which over 9000 
 
 %------------------------------------------------------------------------------
 \subsubsection{Training} 
-To apply Multi-task model and FaceNet model into Face Attandence system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract feature of each patch with 512 dimension vector by pre-trained FaceNet model \cite{ref:facenet}. After that, we split dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, testing subset contains 30 images, 10 images and 30 images respectively. We decide to collect only 30 images for training subset, because we want to reduce time of training and time for collecting images. Next, we use SVM classifier with linear kernel to train on trainning subset and validate on validating subset. The formula of linear kernel:
+To apply Multi-task model and FaceNet model into Face Attandence system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract feature of each patch with 512 dimension vector by pre-trained FaceNet model \cite{ref:facenet}. After that, we split dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, testing subset contains 30 images, 10 images and 30 images respectively. We decide to collect only 30 images for training subset, because we want to reduce time of training and time for collecting images. Especially, we also choose people who have only 1 image in LFW dataset for testing subset, because we want to evaluate the final accuracy of the whole algorithm. Next, we use SVM classifier with linear kernel to train on trainning subset and validate on validating subset. The formula of linear kernel:
 \begin{align}
 	probability = AX + b = W^TX^{bar} 
 \end{align}
@@ -451,7 +451,7 @@ Here we exploit the Principal Component Analysis (PCA) and t-SNE \cite{ref:t-sne
 
 %------------------------------------------------------------------------------
 \subsection{Training}
-Training data is carefully collected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in pratical system ,because it is difficult for users to keep their faces in a correct position. In training data include 52 identities and 1560 images totally. The training accuracy and validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting. 
+Training data is carefully collected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in pratical system ,because it is difficult for users to keep their faces in a correct position. Training data include 52 identities and 1560 images totally. The training accuracy and the validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting. 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/acc.png}
@@ -465,7 +465,12 @@ Training data is carefully collected with different views from $-70^\circ$ to $7
 	\caption{Loss value of SVM with linear kernel.}
 	\label{fig:loss}
 \end{figure}
-We try to implement multi-class SVM by using sklearn library and the accuracy is 99.36\%. After training classifier, we train to get the best threshold. We divide threshold in range $[0;1]$. As a result, threshold for 52 identities is 0.18825. Testing accuracy with threshold achieve 98.85\% on testing subset. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
+We try to implement multi-class SVM by using API of sklearn library, the training accuracy of 100\% and the validating accuracy of 99.36\% are slightly the same in comparison with the above SVM model. After training classifier, we train to get the best threshold to determine "unknown" people. We divide threshold in range $[0;1]$ and then select a maximum value which make model achieves the best accuracy. Particularly, the model ignores people who have the scores being lower than threshold, and we combine the training subset and the validating subset for training threshold. Our dataset of students is collected once a semester, so training threshold with only training subset cause overfitting and difficult recognizing for reality system. As a result, threshold for 52 identities is 0.18825 in Figure \ref{fig:thres}. Testing accuracy with threshold achieves 96.48\% on testing subset, which is shown in Table \ref{tab:summary}. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{img/thres.png}
+	\caption{Training threshold stage, the final threshold is 0.18825}\label{fig:thres}
+\end{figure}
 
 \begin{figure}[h!]
   \centering
@@ -488,6 +493,23 @@ We try to implement multi-class SVM by using sklearn library and the accuracy is
   \caption{Unrecognized identity, (a),(b) are training images, and (c),(d) are testing images in pratical condition.} 
   \label{fig:compare}
 \end{figure}
+
+
+\begin{table}[!h]
+\centering
+\caption{Summary}\label{tab:summary} 
+\begin{tabular}{|c|c|c|c|c|} 
+\hline
+Stage & Training & Validating & Testing \\
+\hline
+Num of images & 1560 & 520 & 5109 \\ 
+\hline
+Num of identites & 52 & 52 & 4121 \\ 
+\hline
+Accuracy & 100\% & 99.36\% & 96.48\% \\
+\hline
+\end{tabular}
+\end{table}
 
 
 %------------------------------------------------------------------------------
