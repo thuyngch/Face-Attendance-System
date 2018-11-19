@@ -15,6 +15,8 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
 
 * The system is deployed in standard portable laptops, which are commonly used by Vietnamese lecturers as well as students. Webcam integrated in laptops is to capture input images.
 
+* Technical details are reported in [this paper](https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/face-attendace-report.pdf).
+
 
 ## Algorithm description
 * The whole system can be modeled as the figure below. There are four stages, namely blur detection, face detection, landmark detection, and face recognition. These four blocks are in the descending order of size in the direction from input to output. This points out that our system is tougher to input frames from the camera when such frames passed through the system. Therefore, best frames are likely to be processed, which may improve both the final recognition accuracy and processing time.
@@ -102,6 +104,9 @@ python 3.data.py
 ```
 python 4.train.py
 ```
+
+
+## Experimental results
 
 
 ## Demo
