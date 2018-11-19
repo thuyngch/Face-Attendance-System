@@ -3,6 +3,14 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
 [Small demo](https://www.youtube.com/watch?v=XzDDHDtsNwk)
 
 
+## Introduction
+* This is our final project in the course "*Artificial Intelligence in Control Engineering*" (August-December 2018), guided by Dr. Cuong Pham-Viet (Faculty of Electrical and Electronics Engineering, HoChiMinh city University of Technology, Vietnam).
+* We have developed an automatic Attendance Checking System that can be used in classes by teachers to check attendances of their students.
+* Face is used as clue for indentifying who a person is.
+* An easy-to-use GUI is integrated so that users can use the system effortlessly without any specialized knowledge.
+* Underlying the GUI, Deep Facial Recognition techniques are exploited as backbone of the system.
+
+
 ## Setup guidance
 * Install dependences:
 ```
