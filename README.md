@@ -77,6 +77,31 @@ workon face_attendace
 cd <dir_to_project>
 pip install -r requirements.txt
 ```
+* To run the program, run the python script:
+```
+python camera.py
+```
+
+
+## Training guidance
+* To train a network appropriate with your own dataset, you need to collect data, using this file:
+```
+workon face_attendace
+cd apis/code_train
+python 1.collect_data.py
+```
+* After collecting enough data (about 50 images per identity), use this file for cropping and aligning faces:
+```
+python 2.alignment.py
+```
+* Then, split the whole data into three sets, namely training, validating, and testing:
+```
+python 3.data.py
+```
+* Finally, train the network and set relevant threshold:
+```
+python 4.train.py
+```
 
 
 ## Demo
