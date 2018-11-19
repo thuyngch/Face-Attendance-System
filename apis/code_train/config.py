@@ -1,0 +1,8 @@
+path_pretrained = "../models/facenet/20180402-114759.pb"
+path_mtcnn = "../models/mtcnn"
+path_train_data = "dataset/train"
+path_valid_data = "dataset/valid" 
+path_test_data = "dataset/test"
+path_train_thres = "dataset/train_thres" 
+path_SVM = "../models/SVM/SVM.ckpt"
+path_log = "../models/log"
