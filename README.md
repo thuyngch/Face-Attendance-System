@@ -118,10 +118,18 @@ python 4.train.py
 
 
 ## Experimental results
+* From the collected data, we divide it into three datasets, including training, validating, and testing. Regarding the testing dataset, there are two subsets taken into account, namely known and unknown ones. The former is from our private data, while the latter is collected from the [LFW dataset](http://vis-www.cs.umass.edu/lfw/). By using only the former, we evaluate the model on a closed set (only containing registered identities), but by combining both two ones, we have an open set (containing not only registered identities but also unregistered identities).
+<p align="center">
+  <img src="https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/img/dataset-summary.png" width="550" alt="accessibility text">
+</p>
+
+* Then, we conduct experiments to point out accuracies of the model on datasets.
+<p align="center">
+  <img src="https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/img/accuracies.png" width="550" alt="accessibility text">
+</p>
 
 
 ## Demo
-* [Small demo](https://www.youtube.com/watch?v=XzDDHDtsNwk)
 
 
 ## Team members
