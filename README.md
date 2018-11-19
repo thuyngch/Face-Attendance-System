@@ -41,7 +41,7 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
 
 * To boost the convenience of use, the GUI is facilitated with an **Attendance Management** module. More specifically, the GUI uses algorithm APIs to identify checked people and manages these results in an Excel file. Thus, owner of the program just need to open the Excel file after the checking procedure to see who attended class.
 
-* In addition, to make sure people joining the checking procedure stand in the best view to the camera, we continued introducing an **Attention** module, which informs checkees whether they are in the accepted view of the system, so that they can change their position to match to requirements of the system.
+* In addition, to make sure people joining the checking procedure stand in the best view to the camera, we continued introducing an **Attention** module, which informs (with voice) checkees whether they are in the accepted view of the system, so that they can change their position to match to requirements of the system.
 
 
 ## Setup guidance
