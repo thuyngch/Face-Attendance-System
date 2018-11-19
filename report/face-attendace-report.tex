@@ -453,13 +453,8 @@ Here we exploit the Principal Component Analysis (PCA) and t-SNE \cite{ref:t-sne
 
 %------------------------------------------------------------------------------
 \subsection{Training}
-<<<<<<< HEAD
 Training data is carefully collected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in pratical system ,because it is difficult for users to keep their faces in a correct position. Training data include 52 identities and 1560 images totally. The training accuracy and the validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting. 
-=======
 Training data is carefully selected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in practical system, because it is difficult for users to keep their faces in a correct position. Therefore, by choosing faces with view variations, the model learns to generalize from training data. The training set includes 52 identities (people), in which, each identity consists of 30 images with various poses. This results in the training set of 1560 images totally. The training accuracy and validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting.
-
-
->>>>>>> 43009f34fee70080711d3256220dccf0d99f6d6d
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/acc.png}
@@ -474,14 +469,12 @@ Training data is carefully selected with different views from $-70^\circ$ to $70
 	\caption{Loss value of SVM with linear kernel.}
 	\label{fig:loss}
 \end{figure}
-<<<<<<< HEAD
 We try to implement multi-class SVM by using API of sklearn library, the training accuracy of 100\% and the validating accuracy of 99.36\% are slightly the same in comparison with the above SVM model. After training classifier, we train to get the best threshold to determine "unknown" people. We divide threshold in range $[0;1]$ and then select a maximum value which make model achieves the best accuracy. Particularly, the model ignores people who have the scores being lower than threshold, and we combine the training subset and the validating subset for training threshold. Our dataset of students is collected once a semester, so training threshold with only training subset cause overfitting and difficult recognizing for reality system. As a result, threshold for 52 identities is 0.18825 in Figure \ref{fig:thres}. Testing accuracy with threshold achieves 96.48\% on testing subset, which is shown in Table \ref{tab:summary}. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/thres.png}
 	\caption{Training threshold stage, the final threshold is 0.18825}\label{fig:thres}
 \end{figure}
-=======
 
 
 \begin{table}
@@ -501,9 +494,7 @@ We try to implement multi-class SVM by using API of sklearn library, the trainin
 	\end{tabularx}
 \end{table}
 
-
 We try to implement multi-class SVM by using sklearn library and the accuracy is 99.36\%. After training classifier, we train to get the best threshold. We divide threshold in range $[0;1]$. As a result, threshold for 52 identities is 0.18825. Testing accuracy with threshold achieve 98.85\% on testing subset. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
->>>>>>> 43009f34fee70080711d3256220dccf0d99f6d6d
 
 \begin{figure}[h!]
   \centering
