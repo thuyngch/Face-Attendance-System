@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Latex
+report/bibliography.log
+report/face-attendace-report.aux
+report/face-attendace-report.log
+report/face-attendace-report.out
+report/face-attendace-report.synctex.gz
+
+# db file
+.TempExcels.db
