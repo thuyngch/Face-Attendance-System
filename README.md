@@ -18,13 +18,13 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
 
 * We have developed an automatic Attendance Checking System that can be used in classes by teachers to check attendances of their students.
 
-* Face is used as clue for indentifying who a person is.
+* Face is used as clue for identifying who a person is.
 
 * An easy-to-use GUI is integrated so that users can use the system effortlessly without any specialized knowledge.
 
-* Underlying the GUI, Deep Facial Recognition techniques are exploited as backbone of the system.
+* Underlying the GUI, Deep Facial Recognition techniques are exploited as the backbone of the system.
 
-* The system is deployed in standard portable laptops, which are commonly used by Vietnamese lecturers as well as students. Webcam integrated in laptops is to capture input images.
+* The system is deployed in standard portable laptops, which are commonly used by Vietnamese lecturers as well as students. Webcam integrated with laptops is to capture input images.
 
 * Technical details are reported in [this paper](https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/face-attendace-report.pdf).
 
@@ -35,13 +35,13 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
   <img src="https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/img/system-pipeline.png" width="700" alt="accessibility text">
 </p>
 
-* First, given an input frame from the webcam, the **Blur Detection** is reponsible for removing blur frames due to motions of scanned people in front of the camera.
+* First, given an input frame from the webcam, the **Blur Detection** is responsible for removing blur frames due to motions of scanned people in front of the camera.
 
 * Second, the **Face Detection** is to localize region containing face in the image. Besides, our system only accepts frames that have one face. Therefore, frames with more than two faces are ignored, yet warnings are also notified.
 
-* Subsequently, frames are passed through the **Lankmark Detection** stage. In here, coordinates of salient points in a face (e.g., eye centers, nose, and mouth corners) are pointed out. The algorithm employs this information to check whether a person is in frontal view of the camera. If not satisfy the condition, the frame is bypassed.
+* Subsequently, frames are passed through the **Lankmark Detection** stage. In here, coordinates of salient points in a face (e.g., eye centers, nose, and mouth corners) are pointed out. The algorithm employs this information to check whether a person is in the frontal view of the camera. If not satisfy the condition, the frame is bypassed.
 
-* Finally, blur-clean, one-face, and frontal-view frames are processed in the **Face Recognition** stage to identify who a person is. Because during the training phase, we explored outlier distribution of identities (registered people), then the system is able to recognize people that have not registered in the system before.
+* Finally, blur-clean, single-face, and frontal-view frames are processed in the **Face Recognition** stage to identify who a person is. Because during the training phase, we explored the outlier distribution of identities (registered people), then the system is able to recognize people that have not registered in the system before.
 
 
 ## GUI description
@@ -50,9 +50,9 @@ An Attendance Checking System using Deep Facial Recognition, written in Python.
   <img src="https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/img/user_guide.png" width="550" alt="accessibility text">
 </p>
 
-* The GUI can communicate to get frames from the webcam and call APIs of algorithm to process these frames.
+* The GUI can communicate to get frames from the webcam and call APIs of the algorithm to process these frames.
 
-* To boost the convenience of use, the GUI is facilitated with an **Attendance Management** module. More specifically, the GUI uses algorithm APIs to identify checked people and manages these results in an Excel file. Thus, owner of the program just need to open the Excel file after the checking procedure to see who attended class.
+* To boost the convenience of use, the GUI is facilitated with an **Attendance Management** module. More specifically, the GUI uses algorithm APIs to identify checked people and manages these results in an Excel file. Thus, the owner of the program just needs to open the Excel file after the checking procedure to see who attended class.
 
 * In addition, to make sure people joining the checking procedure stand in the best view to the camera, we continued introducing an **Attention** module, which informs (with voice) checkees whether they are in the accepted view of the system, so that they can change their position to match to requirements of the system.
 
@@ -118,10 +118,18 @@ python 4.train.py
 
 
 ## Experimental results
+* From the collected data, we divide it into three datasets, including training, validating, and testing. Regarding the testing dataset, there are two subsets taken into account, namely known and unknown ones. The former is from our private data, while the latter is collected from the [LFW dataset](http://vis-www.cs.umass.edu/lfw/). By using only the former, we evaluate the model on a closed set (only containing registered identities), but by combining both two ones, we have an open set (containing not only registered identities but also unregistered identities).
+<p align="center">
+  <img src="https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/img/dataset-summary.png" width="550" alt="accessibility text">
+</p>
+
+* Then, we conduct experiments to point out accuracies of the model on datasets.
+<p align="center">
+  <img src="https://github.com/AntiAegis/Face-Attendance-System/blob/master/report/img/accuracies.png" width="550" alt="accessibility text">
+</p>
 
 
 ## Demo
-* [Small demo](https://www.youtube.com/watch?v=XzDDHDtsNwk)
 
 
 ## Team members
@@ -129,5 +137,5 @@ python 4.train.py
 * **Do Tieu Thien** - *responsible for algorithms*, *implement the Face Recognition stage*
 * **Nguyen Tan Sy** - *implement GUI*
 * **Le Van Hoang Phuong** - *implement the Attendace Management and Attention modules in GUI*
-* **Nguyen Van Qui** - *implement the Face and Lanmark Detection stages*
+* **Nguyen Van Qui** - *implement the Face and Landmark Detection stages*
 * **Nguyen Tan Phu** - *implement the Blur Detection stage*
