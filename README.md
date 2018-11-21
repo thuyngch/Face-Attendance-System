@@ -137,5 +137,5 @@ python 4.train.py
 * **Do Tieu Thien** - *responsible for algorithms*, *implement the Face Recognition stage*
 * **Nguyen Tan Sy** - *implement GUI*
 * **Le Van Hoang Phuong** - *implement the Attendace Management and Attention modules in GUI*
-* **Nguyen Van Qui** - *implement the Face and Lanmark Detection stages*
+* **Nguyen Van Qui** - *implement the Face and Landmark Detection stages*
 * **Nguyen Tan Phu** - *implement the Blur Detection stage*

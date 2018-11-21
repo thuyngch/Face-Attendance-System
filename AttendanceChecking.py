@@ -9,6 +9,7 @@ from time import strftime, gmtime
 from dateutil import parser
 from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Border, Font, Side
+from openpyxl.utils.exceptions import InvalidFileException
 
 
 class AttendanceChecking:
@@ -23,15 +24,18 @@ class AttendanceChecking:
 
     def __init__(self, file_path):
         if self.check_file_exist(file_path):
-            # parameters
             self.file_path = file_path
-            self.workbook = load_workbook(file_path)
-            self.sheet = self.workbook.active
 
-            if (
-                    not hasattr(self, "sheet")
-                    or (not self.if_standard_excel())
-            ):
+            try:
+                self.workbook = load_workbook(file_path)
+                self.sheet = self.workbook.active
+                if (
+                        not hasattr(self, "sheet")
+                        or (not self.if_standard_excel())
+                ):
+                    print("Invalid file format!")
+
+            except InvalidFileException:
                 print("Invalid file format!")
 
     @staticmethod
