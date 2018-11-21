@@ -134,9 +134,9 @@ python 4.train.py
 
 
 ## Team members
-* **Nguyen Chinh Thuy** - *work generally*, *arrage tasks*
-* **Do Tieu Thien** - *responsible for algorithms*, *implement the Face Recognition stage*
-* **Nguyen Tan Sy** - *implement GUI*
-* **Le Van Hoang Phuong** - *implement the Attendace Management and Attention modules in GUI*
-* **Nguyen Van Qui** - *implement the Face and Landmark Detection stages*
-* **Nguyen Tan Phu** - *implement the Blur Detection stage*
+* [**Nguyen Chinh Thuy**](https://github.com/AntiAegis)- *work generally*, *arrage tasks*
+* [**Do Tieu Thien**](https://github.com/dotieuthien) - *responsible for algorithms*, *implement the Face Recognition stage*
+* [**Nguyen Tan Sy**](https://github.com/tansyab1) - *implement GUI*
+* [**Le Van Hoang Phuong**](https://github.com/PhuongLeVanHoang) - *implement the Attendace Management and Attention modules in GUI*
+* [**Nguyen Van Qui**](https://github.com/nvqui97) - *implement the Face and Landmark Detection stages*
+* [**Nguyen Tan Phu**](https://github.com/TanPhuNguyen) - *implement the Blur Detection stage*
