@@ -93,7 +93,7 @@ However, most of the available face detection and face alignment methods ignore 
 
 %------------------------------------------------------------------------------
 \subsection{Landmark detection}
-The locations of the facial landmark points around facial components (nose, eye centers, etc) capture facial deformations due to head movements and facial expressions, so we will control non-frontal faces for better accuracy. They are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use Dlib library which is a powerfull opened source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
+The locations of the facial landmark points around facial components (nose, eye centers, etc) capture facial deformations due to head movements and facial expressions, so we will control non-frontal faces for better accuracy. They are hence important for various facial analysis tasks. Many facial landmark detection algorithms have been developed to automatically detect those key points over the years. In this paper, we use Dlib library which is a powerful opened source for face and facial landmark detection. We will discuss our implement in detail in section \ref{frontal-view-detection}.
 
 
 %------------------------------------------------------------------------------
@@ -134,9 +134,9 @@ Our work is organized as follows. In section \ref{implementation}, stages of the
 \subsection{Motion-blur detection}
 \label{motion-blur-detection}
 
-The first stage of this system is detecting blurred image and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbour pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. So as to detect whether an image is blurred, we use the 2D-FFT (2D-Fast Fourier Transform) method.
+The first stage of this system is detecting blurred images and rejecting them out of next stage. We know that the blurred image means each pixel in the source image gets spread out and mixed into surrounding neighbor pixels. For our attendance checking system, the motion blur happens when an object (namely face or webcam) moves during the exposure. So as to detect whether an image is blurred, we use the 2D-FFT (2D-Fast Fourier Transform) method.
 
- We will review about Fourier Transform of Images. To compute the Fourier transform of an image, you need to:
+We will review about Fourier Transform of Images. To compute the Fourier transform of an image, you need to:
 \begin{itemize}
 \item Compute DFT of each row, in place.
 \item Compute DFT of each column, in place.
@@ -188,7 +188,7 @@ We translate the picture so that pixel (0,0), which now contains frequency $(\om
 log(magnitude) of each complex number. For color images, do the above to each of the three channels
 (R, G, and B) independently.
 
-Apply to our system, firstly, we calculate FFT of image. Secondly, we will compute mean amplitude spectrum value of entire pixel in image and. Finally, the result of this operation is compared to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of system.
+Apply to our system, firstly, we calculate FFT of images. Secondly, we will compute mean amplitude spectrum value of entire pixels in image and. Finally, the result of this operation is compared to an optimal threshold which distinguishes blurred and non-blurred image as accurate as possible. The image is called non-blurred if and only if its average value greater than the threshold value, and vice versa. After that, non-blurred images are applied to face detection stage of the system.
 
 
 %------------------------------------------------------------------------------
@@ -223,7 +223,7 @@ These steps are implemented based on 5-point facial landmark technique with Dlib
 followed by L2 normalization, which results in the face embedding. This is followed by the triplet loss during training.}\label{fig:pipeline}
 \end{figure}
 
-In this stage, faces in raw images are detected and aligned by Multi-task CNN, we use convenient pre-trained FaceNet model to extract feature (in Figure \ref{fig:pipeline}) and then feedforward it to a SVM classifier for regconition. 
+In this stage, faces in raw images are detected and aligned by Multi-task CNN, we use convenient pre-trained FaceNet model to extract feature (in Figure \ref{fig:pipeline}) and then feedforward it to a SVM classifier for recognition. 
 
 
 %------------------------------------------------------------------------------
@@ -231,7 +231,7 @@ In this stage, faces in raw images are detected and aligned by Multi-task CNN, w
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/mtcnn.png}
-	\caption{Pipeline of our cascaded framework that includes three-stage multi-task deep convolutional networks. Firstly, candidate windows are produced
+	\caption{The pipeline of our cascaded framework that includes three-stage multi-task deep convolutional networks. Firstly, candidate windows are produced
 through a fast Proposal Network (P-Net). After that, we refine these candidates
 in the next stage through a Refinement Network (R-Net). In the third stage,
 The Output Network (O-Net) produces final bounding box and facial landmarks position.}\label{fig:mtcnn}
@@ -241,14 +241,14 @@ The overall pipeline Multi-task CNN is shown in Figure \ref{fig:mtcnn}. An image
 
 \textbf{Stage 1}: A fully convolutional network is exploited, called Proposal Network (P-Net), to obtain the proposed windows and their bounding box regression vectors. Then using the estimated bounding box regression vectors to calibrate the candidates. After that, employing non-maximum suppression (NMS) to merge highly overlapped candidates.
 
-For each candidate window, P-CNN predict the offset between it and the nearest ground truth (i.e.,the bounding boxes’ left top, height, and width). The learning objective is formulated as a regression problem, and  the Euclidean loss is employed for each sample $x_i$:
+For each candidate window, P-CNN predicts the offset between it and the nearest ground truth (i.e., the bounding boxes’ left top, height, and width). The learning objective is formulated as a regression problem, and  the Euclidean loss is employed for each sample $x_i$:
 \begin{align}
-	L_i^{box} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
+    L_i^{box} = \Vert y_i^{prediction} - y_i^{truth} \Vert _2^2
 \end{align}
-		
+        
 \textbf{Stage 2}: All candidates are fed to following CNN, called Refine Network (R-Net), which further rejects a large number of false candidates, performs calibration with bounding box regression, and NMS candidate merge.
 
-\textbf{Stage 3}: his stage is similar to the second stage, but in this stage we aim to describe the face in more details. In particular, the network will output five facial landmarks’ positions.
+\textbf{Stage 3}: his stage is similar to the second stage, but in this stage, we aim to describe the face in more details. In particular, the network will output five facial landmarks’ positions.
 
 Similar to the bounding box regression task, facial landmark detection is formulated as a regression problem: 
 
@@ -275,32 +275,32 @@ This model use Inception-ResNet v1 architecture \cite{ref:in-res} and triplet lo
 	\label{fig:triplet}
 \end{figure}
 
-The embedding is represented by $f(x) \in R^d$. It embeds an image $x$ into a $d$-dimensional Euclidean space. Here we want to ensure that an image $x_i^a$ (anchor) of a specific person is closer to all other images $x_i^p$ (positive) of the same person than it is to any image $x_i^n$ (negative) of any other person. This is visualized in Figure \ref{fig:triplet}. Thus we want, 
+The embedding is represented by $f(x) \in R^d$. It embeds an image $x$ into a $d$-dimensional Euclidean space. Here we want to ensure that an image $x_i^a$ (anchor) of a specific person is close to all other images $x_i^p$ (positive) of the same person than it is to any image $x_i^n$ (negative) of any other person. This is visualized in Figure \ref{fig:triplet}. Thus we want, 
 \begin{align}
-	\Vert f(x_i^a) - f(x_i^p) \Vert_2^2 + \alpha < \Vert f(x_i^a) - f(x_i^n) \Vert_2^2
+    \Vert f(x_i^a) - f(x_i^p) \Vert_2^2 + \alpha < \Vert f(x_i^a) - f(x_i^n) \Vert_2^2
 \end{align}
 where $\alpha$ is a margin that is enforced between positive and negative pairs. The loss that is being minimized is then: 
 \begin{align}
-	L = \sum_i^N(\Vert f(x_i^a) - f(x_i^p) \Vert_2^2  - \Vert f(x_i^a) - f(x_i^n) \Vert_2^2 + \alpha)
+    L = \sum_i^N(\Vert f(x_i^a) - f(x_i^p) \Vert_2^2  - \Vert f(x_i^a) - f(x_i^n) \Vert_2^2 + \alpha)
 \end{align}
 In this implement, FaceNet model is trained on VGGFace2 dataset which over 9000 identities and over 3.3 million faces. VGGFace2 is a large-scale face recognition dataset from Google Image Search and have large variations in pose, age, illumination, ethnicity and profession. Therefore, embeddings is specifical for each person.
 
 
 %------------------------------------------------------------------------------
 \subsubsection{Training} 
-To apply Multi-task model and FaceNet model into Face Attandence system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract feature of each patch with 512 dimension vector by pre-trained FaceNet model \cite{ref:facenet}. After that, we split dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, testing subset contains 30 images, 10 images and 30 images respectively. We decide to collect only 30 images for training subset, because we want to reduce time of training and time for collecting images. Especially, we also choose 4069 people who have only 1 image in LFW dataset for testing subset, because we want to evaluate the final accuracy of the whole algorithm. Next, we use SVM classifier with linear kernel to train on trainning subset and validate on validating subset. The formula of linear kernel:
+To apply Multi-task model and FaceNet model into Face Attandence system, we feedforward raw images of students into Multi-task CNN to get face patches, then extract feature of each patch with 512 dimension vector by pre-trained FaceNet model \cite{ref:facenet}. After that, we split the dataset of students into 3 subsets: training, validating and testing. Each person in training, validating, and testing set contains 30 images, 10 images, and 30 images, in turn. We decide to collect only 30 images for the training set, because we want to reduce time of training and time for collecting images. Especially, we also choose 4069 people who have only 1 image in LFW dataset \cite{ref:data-lfw} for the testing set, because we want to evaluate the final accuracy of the whole algorithm. Next, we use SVM classifier with linear kernel to train on the training set and validate on validating subset. The formula of linear kernel:
 \begin{align}
-	probability = AX + b = W^TX^{bar} 
+    probability = AX + b = W^TX^{bar} 
 \end{align}
 where $W$ is weight matrix, $X^{bar}=[1,x_1,x_2,...x_n]$. To solve multi-class classification problem, loss funtion of multi-class SVM is different from binary SVM. The output of trained-classifier is probability vector whose each element represent ability of an identity who anchor belong to. We assume $x_i$ is embedding $i^{th}$, $z_i$ is probability score of true label of $x_i$, $z_j$ ($j\ne i$) is probability scores of other classes of $x_i$ and $\Delta$ is safe distance to ensure $z_j$ is not much close with $z_i$. Loss value of $x_i$ with m classes is defined:
 \begin{align}
-	loss = \sum_{j=1}^m(max(0,z_j-(z_i-\Delta))
+    loss = \sum_{j=1}^m(max(0,z_j-(z_i-\Delta))
 \end{align}
 In dataset which has $n$ embeddings, total loss value is:
 \begin{align}
-	loss^{total} = \sum_{i=1}^n\sum_{j=1}^m(max(0,z_j-(z_i-\Delta))
+    loss^{total} = \sum_{i=1}^n\sum_{j=1}^m(max(0,z_j-(z_i-\Delta))
 \end{align}
-This loss function will make $z_i$ is maximum. Thus, anchor is determined by choose which identity has maximum probability, that suffer from mistakes when faces of strangers appear. To solve open-set problem, we combine both two subsets: training and validating to training threshold. This threshold helps us to eliminate "unknow" people, additionally ensure that the result of system achieves higher accuracy.
+This loss function will make $z_i$ is maximum. Thus, anchor is determined by choose which identity has maximum probability, that suffers from mistakes when faces of strangers appear. To solve the open-set problem, we combine both two sets: training and validating to select the best threshold. This threshold helps us to eliminate "unknown" people, additionally ensure that the result of the system achieves higher accuracy.
 \begin{figure}
     \centering
     \includegraphics[width=0.7\linewidth]{img/in_res_v1.png}
@@ -330,7 +330,7 @@ GUIDE primarily is a set of layout tools. However, you must create a PY-file tha
 
 \textit{Laying out the GUI components}
 
-While it is possible to write an PY-file that contains all the commands to lay out a GUI, it is easier to use GUIDE to lay out the components interactively and to generate one file that save the GUI:
+While it is possible to write an PY-file that contains all the commands to lay out a GUI, it is easier to use GUIDE to lay out the components interactively and to generate one file that saves the GUI:
 
 UI-file -contains a complete description of the GUI figure and all of its children (uicontrols and axes), as well as the values of all object properties.
 
@@ -341,15 +341,15 @@ Once you have the UI-file, you will use PyQt5 to extract the UI-file to PY-file 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{img/gui.png}
-	\caption{Parts of GUI Implementation}\label{fig:gui}
+	\caption{Parts of GUI Implementation.}\label{fig:gui}
 \end{figure}
 
-The GUI are available from the QtDesigner shown in the figure below. The design is described briefly below. Subsequent sections show you how to use them.
+The GUI is available from the QtDesigner shown in the figure below. The design is described briefly below. Subsequent sections show you how to use them.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{img/user_guide.png}
-	\caption{GUI layout}\label{fig:user_guide}
+	\caption{GUI layout.}\label{fig:user_guide}
 \end{figure}
 
 \begin{table}[!h]
@@ -372,12 +372,7 @@ The GUI are available from the QtDesigner shown in the figure below. The design 
 \subsection{Attendance management}
 \label{attendance-management}
 
-This is the final phase of Face Attendance Checking System.
-It was designated to mark the presence of one resulted from
-our algorithm in a file of excel format, namely xlsx extension.
-To be used by the system, the excel file must meet
-a stringent format made up of essential contents and be
-generated by the GUI. 
+This is a module in the GUI. It was designated to mark the presence of one resulted from our algorithm in a file of excel format, namely xlsx extension. To be used by the system, the excel file must meet a stringent format made up of essential contents and be generated by the GUI. 
 
 Fig. \ref{fig:form-new} depicts a new standard empty
 excel table generated by our GUI. After obtaining a new file, we should fill in the table with the desired data (Fig. \ref{fig:form-data}). The most special things in this table are column ID and Total. 
@@ -391,21 +386,36 @@ After attendance checking process is completed, the Total column will display th
 
 
 \begin{figure}
-    \centering
+  \centering
+  \begin{subfigure}[b]{\linewidth}
+  	\centering
     \includegraphics[width=0.8\linewidth]{img/form-new.png}
-	\caption{New standard excel form}\label{fig:form-new}
-\end{figure}
-
-\begin{figure}
-    \centering
+	\caption{New standard excel form}
+	\label{fig:form-new}
+  \end{subfigure}
+  
+  \hspace{3mm}
+  
+  \centering
+  \begin{subfigure}[b]{\linewidth}
+  	\centering
     \includegraphics[width=0.8\linewidth]{img/form-data.png}
-	\caption{Excel form contain pre-inputed data}\label{fig:form-data}
-\end{figure}
-
-\begin{figure}
-    \centering
+	\caption{Excel form contain pre-inputed data}
+	\label{fig:form-data}
+  \end{subfigure}
+  
+  \hspace{3mm}
+  
+  \centering
+  \begin{subfigure}[b]{\linewidth}
+  	\centering
     \includegraphics[width=0.8\linewidth]{img/form-checked.png}
-	\caption{Form is under checking}\label{fig:form-checked}
+	\caption{Form is under checking}
+	\label{fig:form-checked}
+  \end{subfigure}
+  
+  \caption{Attendance Management module.}
+  \label{fig:attendace-management-module}
 \end{figure}
 
 
@@ -416,11 +426,29 @@ After attendance checking process is completed, the Total column will display th
 \section{Experimental result}
 \label{experimental-result}
 
-In this section, we first evaluate the effectiveness of the features extracted from FaceNet. Then, we compare our system in different contexts such as background, illumination, and resolution of camera, before examining the computational efficiency of our system.
+In this section, we first evaluate the effectiveness of the features extracted from FaceNet. Then, we conduct experiments to point out accuracies of the model on datasets (e.g., training, validating, and testing). Regarding the test dataset, there are two subsets taken into account, namely known and unknown ones. The former is from our private data, while the latter is collected from the LFW dataset \cite{ref:data-lfw}. By using only the former, we evaluate the model on a closed set (only containing registered identities), but by combining both two ones, we have an open set (containing not only registered identities but also unregistered identities).
+
+
+\begin{table}[h!]
+\centering
+	\caption{Dataset summary}
+	\label{table:dataset}
+		\begin{tabularx}{0.93\linewidth}{ccccc}
+		\toprule
+		Dataset  &  Subset  &  \#identities   &  \#images      &  \#images  \\
+		~        &  ~       &  ~              &  per identity  &  totally  \\
+		\midrule
+		Training    &  -            &  52    &  30  &  1560  \\ 
+		Validating  &  -            &  52    &  10  &  520  \\ 
+		Testing     &  Known (1)    &  52    &  20  &  1040  \\
+		~           &  Unknown (2)  &  4069  &  1   &  4069  \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
 
 
 %------------------------------------------------------------------------------
-\subsection{Embeddings} 
+\subsection{Feature embeddings} 
 
 \begin{figure}
   \centering
@@ -452,49 +480,58 @@ Here we exploit the Principal Component Analysis (PCA) and t-SNE \cite{ref:t-sne
 
 
 %------------------------------------------------------------------------------
-\subsection{Training}
-Training data is carefully collected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in pratical system ,because it is difficult for users to keep their faces in a correct position. Training data include 52 identities and 1560 images totally. The training accuracy and the validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting. 
-Training data is carefully selected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in practical system, because it is difficult for users to keep their faces in a correct position. Therefore, by choosing faces with view variations, the model learns to generalize from training data. The training set includes 52 identities (people), in which, each identity consists of 30 images with various poses. This results in the training set of 1560 images totally. The training accuracy and validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting.
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{img/acc.png}
-	\caption{Accuracy in training and validating stage.}
-	\label{fig:acc}
-\end{figure}
+\subsection{Model evaluation}
+Training data is carefully selected with different views from $-70^\circ$ to $70^\circ$. This work can improve accuracy in practical systems because it is difficult for users to keep their faces in a correct position. Therefore, by choosing faces with view variations, the model learns to generalize from training data. The training set includes 52 identities (people), in which, each identity consists of 30 images with various poses. This results in the training set of 1560 images totally. The training accuracy and validating accuracy of SVM classifier is 100\% and 99.22\% respectively (in Figure \ref{fig:acc}). In Figure \ref{fig:loss}, the convergence of loss can indicate that this model achieves a good performance without overfitting.
 
 
 \begin{figure}
-    \centering
+  
+  \begin{subfigure}[b]{\linewidth}
+  	\centering
     \includegraphics[width=1\linewidth]{img/loss.png}
-	\caption{Loss value of SVM with linear kernel.}
+	\caption{Loss}
 	\label{fig:loss}
+  \end{subfigure}
+  
+  \hspace{3mm}
+  
+  \begin{subfigure}[b]{\linewidth}
+  	\centering
+    \includegraphics[width=1\linewidth]{img/acc.png}
+	\caption{Accuracy}
+	\label{fig:acc}
+  \end{subfigure}
+  
+  \caption{Loss and accuracy during the training phase.} 
+  \label{fig:training-phase}
 \end{figure}
-We try to implement multi-class SVM by using API of sklearn library, the training accuracy of 100\% and the validating accuracy of 99.36\% are slightly the same in comparison with the above SVM model. After training classifier, we train to get the best threshold to determine "unknown" people. We divide threshold in range $[0;1]$ and then select a maximum value which make model achieves the best accuracy. Particularly, the model ignores people who have the scores being lower than threshold, and we combine the training subset and the validating subset for training threshold. Our dataset of students is collected once a semester, so training threshold with only training subset cause overfitting and difficult recognizing for reality system. As a result, threshold for 52 identities is 0.18825 in Figure \ref{fig:thres}. Testing accuracy with threshold achieves 96.48\% on testing subset, which is shown in Table \ref{tab:summary}. In practical environment, we test on 32 identities, there are 29 easily recognized identites and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
+
+
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=1\linewidth]{img/acc.png}
+%	\caption{Accuracy in training and validating stage.}
+%	\label{fig:acc}
+%\end{figure}
+%
+%
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=1\linewidth]{img/loss.png}
+%	\caption{Loss value of SVM with linear kernel.}
+%	\label{fig:loss}
+%\end{figure}
+
+
+We try to implement multi-class SVM by using API of sklearn library, the training accuracy of 100\% and the validating accuracy of 99.36\% are slightly the same in comparison with the above SVM model. After training classifier, we train to get the best threshold to determine ``unknown" people. We divide threshold in range $[0;1]$ and then select a maximum value which makes model achieves the best accuracy. Particularly, the model ignores people who have the scores being lower than a threshold, and we combine the training subset and the validating subset for training threshold. Our dataset of students is collected once a semester, so training threshold with only training subset cause overfitting and difficult recognizing for reality system. As a result, threshold for 52 identities is 0.18825 in Figure \ref{fig:thres}. Testing accuracy with threshold achieves 96.48\% on the testing set, which is shown in Table \ref{table:accuracy}. In practical environment, we test on 32 identities, there are 29 easily recognized identities and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different illumination lead the probabilities of the testing anchor are lower than a threshold, so training data have to cover many real-life cases to create the best classifier.
+
+ 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{img/thres.png}
 	\caption{Training threshold stage, the final threshold is 0.18825}\label{fig:thres}
 \end{figure}
 
-
-\begin{table}
-\centering
-	\caption{Dataset summary}
-	\label{table:dataset}
-		\begin{tabularx}{0.65\linewidth}{lcc}
-		\toprule
-		Dataset      &   Number of  &  Number of images  \\ 
-		~            &  identities  &  per identity  \\
-		\midrule
-		Training     &   52  &  30  \\ 
-		Validating   &   52  &  10  \\ 
-		Testing      &   52  &  30  \\ 
-		Unknown      &   xx  &  xx  \\ 
-		\bottomrule
-	\end{tabularx}
-\end{table}
-
-We try to implement multi-class SVM by using sklearn library and the accuracy is 99.36\%. After training classifier, we train to get the best threshold. We divide threshold in range $[0;1]$. As a result, threshold for 52 identities is 0.18825. Testing accuracy with threshold achieve 98.85\% on testing subset. In practical environment, we test on 32 identities, three are 29 identites recognized easily and 3 identities who are not recognized continuously. In Figure \ref{fig:compare}, the (a),(b) are training images and (c),(b) are testing images, the effect of different ilumination lead the probabilities of testing anchor are lower than threshold, so training data have to cover many real-life cases to create the best classifier.  
 
 \begin{figure}[h!]
   \centering
@@ -519,20 +556,20 @@ We try to implement multi-class SVM by using sklearn library and the accuracy is
 \end{figure}
 
 
-\begin{table}[!h]
+\begin{table}
 \centering
-\caption{Summary}\label{tab:summary} 
-\begin{tabular}{|c|c|c|c|c|} 
-\hline
-Stage & Training & Validating & Testing \\
-\hline
-Num of images & 1560 & 520 & 5109 \\ 
-\hline
-Num of identites & 52 & 52 & 4121 \\ 
-\hline
-Accuracy & 100\% & 99.36\% & 96.48\% \\
-\hline
-\end{tabular}
+	\caption{Accuracies among Datasets}
+	\label{table:accuracy}
+		\begin{tabularx}{0.935\linewidth}{ccccc}
+		\toprule
+		Dataset  &  Training  &  Validating   &  Testing (1)   &  Testing (1+2)  \\
+		~        &  ~         &  ~            &  (Closed set)  &  (Open set)  \\
+		\midrule
+		\#images      &  1560   &  520      &  1040     &  5109  \\
+		\#identities  &  52     &  52       &  52       &  4121  \\
+		Accuracy      &  100\%  &  99.36\%  &  98.85\%  &  96.48\%  \\
+		\bottomrule
+	\end{tabularx}
 \end{table}
 
 

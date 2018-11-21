@@ -263,7 +263,7 @@ class Camera(QMainWindow):
 									# display the number of absences
 									get_total(self.file_path,id)
 									self.check_list.append(mssv_check)
-									print(self.check_list)
+									#print(self.check_list)
 									self.checked =0
 								else:
 									pass
