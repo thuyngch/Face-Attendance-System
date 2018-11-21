@@ -76,13 +76,13 @@ class OpenExcels(QWidget):
 
 		options = QFileDialog.Options()
 		options |= QFileDialog.DontUseNativeDialog
-		fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx)", options=options)
+		fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","Excel Workbook (*.xlsx)", options=options)
 		camera.file_path = os.path.join(fileName)
 
 		while camera.file_path:
 			if not camera.file_path.endswith('.xlsx'):
 				QMessageBox.warning(self, 'File Type Warning', ' Wrong Type Selected') 
-				fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx)", options=options)		
+				fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","Excel Workbook (*.xlsx)", options=options)		
 				camera.file_path = os.path.join(fileName)
 				if camera.file_path == "":
 					break
@@ -90,7 +90,7 @@ class OpenExcels(QWidget):
 			file2= AttendanceChecking(camera.file_path)
 			if not file2.if_standard_excel():
 				QMessageBox.warning(self, 'File Content Warning', ' Wrong File Content') 
-				fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","All Files (*);;Excel Workbook (*.xlsx)", options=options)		
+				fileName, _ = QFileDialog.getOpenFileName(self,"Open Excels", "","Excel Workbook (*.xlsx)", options=options)		
 				camera.file_path = os.path.join(fileName)
 				continue
 			else:
@@ -259,12 +259,13 @@ class Camera(QMainWindow):
 								if self.count ==5:
 									id = int(id)
 									mssv_check=self.correct_mssv(int(id))
-									self.insert_to_db(mssv_check)
-									# display the number of absences
-									get_total(self.file_path,id)
-									self.check_list.append(mssv_check)
-									#print(self.check_list)
-									self.checked =0
+									if mssv_check:
+										self.insert_to_db(mssv_check)
+										# display the number of absences
+										get_total(self.file_path,id)
+										self.check_list.append(mssv_check)
+										#print(self.check_list)
+										self.checked = False
 								else:
 									pass
 							else:
@@ -478,7 +479,7 @@ class Camera(QMainWindow):
 		if okPressed:
 			return(mssv_check)
 		else:
-			return(mssv)
+			return(0)
 
 
 
