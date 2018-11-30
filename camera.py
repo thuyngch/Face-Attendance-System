@@ -232,7 +232,7 @@ class Camera(QMainWindow):
 			face_locs = find_bbox(self.image)
 			n_faces = len(face_locs)
 			# Remove multi-face frame
-			if n_faces==1:
+			if n_faces<=3:
 				is_frontal, _ = check_front_view(self.image, face_locs)
 				# Remove non-frontal-view frame
 				if is_frontal:
@@ -287,7 +287,7 @@ class Camera(QMainWindow):
 						pass
 					self.ui.textBrowser.append(dis_str)
 			else:
-				dis_str= "Require 1 face in the camera"
+				dis_str= "Require no more than 3 faces"
 				self.ui.textBrowser.append(dis_str)
 		else:
 			dis_str= "Frame is montion-blurred"
