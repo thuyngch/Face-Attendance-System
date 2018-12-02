@@ -232,7 +232,7 @@ class Camera(QMainWindow):
 			face_locs = find_bbox(self.image)
 			n_faces = len(face_locs)
 			# Remove multi-face frame
-			if n_faces<=3:
+			if 0<n_faces<=3:
 				is_frontal, _ = check_front_view(self.image, face_locs)
 				# Remove non-frontal-view frame
 				if is_frontal:

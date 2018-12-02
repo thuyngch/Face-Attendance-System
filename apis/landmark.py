@@ -73,7 +73,7 @@ def check_front_view(image, face_loc):
         is_front_face : (bool) The face is in the front view or not?
         message : (str) 
     """
-    assert len(face_loc) == 1
+    assert 0 < len(face_loc) <= 3
     assert image.shape[0] == 480
 
     top, left, width, _ = face_loc[0]
