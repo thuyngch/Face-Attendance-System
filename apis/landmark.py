@@ -29,7 +29,7 @@ def find_bbox(image):
 
 
 def list_to_rect(face_loc):
-    assert len(face_loc) == 1
+    assert 0 < len(face_loc) <= 3
     y, x, w, h = face_loc[0]
     return dlib.rectangle(left=x, top=y, right=x+w, bottom=y+h)
 
