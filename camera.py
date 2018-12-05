@@ -408,7 +408,11 @@ class Camera(QMainWindow):
 		QtCore.QCoreApplication.instance().quit
 		if self.file_path:
 			self.Save_to_excel(self.file_path)
-		sys.exit()
+		reply = QMessageBox.question(self, 'Message',
+			"Are you sure to quit?", QMessageBox.Yes | 
+			QMessageBox.No, QMessageBox.No)
+		if reply == QMessageBox.Yes:
+			sys.exit()
 
 
 	def closeEvent(self, event):
@@ -448,7 +452,7 @@ class Camera(QMainWindow):
 				for row in c.fetchall():
 					mssv.append(row[0])
 				if mssv:
-					filecheck = AttendanceChecking(filepath)
+					filecheck = AttendanceChecking(self.file_path)
 					failcases=filecheck.start_checking(mssv)
 					fail_str = "Incomplete IDs:\n"
 					if failcases:
@@ -457,6 +461,7 @@ class Camera(QMainWindow):
 						
 						QMessageBox.warning(self, 'Failcase list', fail_str)
 					c.execute('drop table if exists Temp')
+					c.execute('create table if not exists Temp(mssv INT NOT NULL)')
 				else:
 					self.ui.textBrowser.append("There is nothing to save")
 			db.commit()
