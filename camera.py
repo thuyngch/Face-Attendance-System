@@ -406,12 +406,12 @@ class Camera(QMainWindow):
 		[if there is a close event,data in the table will be saved to excel file  ]
 		"""
 		QtCore.QCoreApplication.instance().quit
-		if self.file_path:
-			self.Save_to_excel(self.file_path)
 		reply = QMessageBox.question(self, 'Message',
 			"Are you sure to quit?", QMessageBox.Yes | 
 			QMessageBox.No, QMessageBox.No)
 		if reply == QMessageBox.Yes:
+			if self.file_path:
+				self.Save_to_excel(self.file_path)
 			sys.exit()
 
 
