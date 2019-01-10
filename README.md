@@ -116,6 +116,8 @@ python 3.data.py
 python 4.train.py
 ```
 
+If you refer a step-by-step guidance, we are making a video doing this. Please check this [issue#6](https://github.com/AntiAegis/Face-Attendance-System/issues/6).
+
 
 ## Experimental results
 * From the collected data, we divide it into three datasets, including training, validating, and testing. Regarding the testing dataset, there are two subsets taken into account, namely known and unknown ones. The former is from our private data, while the latter is collected from the [LFW dataset](http://vis-www.cs.umass.edu/lfw/). By using only the former, we evaluate the model on a closed set (only containing registered identities), but by combining both two ones, we have an open set (containing not only registered identities but also unregistered identities).
